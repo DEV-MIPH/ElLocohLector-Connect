@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ElLokohLectorApplication<lokohlector>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.duoc.lokohlector.ElLokohLectorApplication",
+            "projectName": "lokohlector",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
