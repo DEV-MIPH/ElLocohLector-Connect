@@ -22,7 +22,6 @@ public class ElLocohController {
     public ResponseEntity<List<Libro>> getLibros() {
         List<Libro> libros = service.getLibros();
         return ResponseEntity.ok(libros);
-    
     }
     @PostMapping("/libro")
     public ResponseEntity<Libro> getLibro(@RequestBody Libro libro) {
