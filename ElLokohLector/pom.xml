@@ -19,7 +19,6 @@
     </properties>
     
     <dependencies>
-        <!-- Spring Boot Web and MyBatis dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
