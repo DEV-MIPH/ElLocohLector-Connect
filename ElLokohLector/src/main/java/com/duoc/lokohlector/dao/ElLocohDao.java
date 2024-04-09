@@ -22,5 +22,5 @@ public interface ElLocohDao {
                 "autor.id = libro.autor\n" + 
                 "JOIN categoria on libro.categoria = categoria.id\n" + 
                 "WHERE libro.id = #{id};")
-    public Libro getLibro(@Param("id") int id);
+    public Libro getLibro(@Param("id") int id);4
 }
