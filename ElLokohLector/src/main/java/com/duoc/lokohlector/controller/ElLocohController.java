@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.duoc.lokohlector.lib.Libro;
+import com.duoc.lokohlector.lib.autor;
+import com.duoc.lokohlector.lib.categoria;
+import com.duoc.lokohlector.lib.edicion;
+import com.duoc.lokohlector.lib.editorial;
 import com.duoc.lokohlector.service.ElLocohService;
 
 import java.util.List;
@@ -29,5 +33,30 @@ public class ElLocohController {
         Libro res = service.getLibro(libro.getId());
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping("/autores")
+    public ResponseEntity<List<autor>> getAutores() {
+        List<autor> autores = service.getAutores();
+        return ResponseEntity.ok(autores);
+    }
+
+    @GetMapping("/categorias")
+    public ResponseEntity<List<categoria>> getCategorias() {
+        List<categoria> categorias = service.getCategorias();
+        return ResponseEntity.ok(categorias);
+    }
+
+    @GetMapping("/editoriales")
+    public ResponseEntity<List<editorial>> getEditoriales() {
+        List<editorial> editoriales = service.getEditoriales();
+        return ResponseEntity.ok(editoriales);
+    }
+
+    @GetMapping("/ediciones")
+    public ResponseEntity<List<edicion>> getEdiciones() {
+        List<edicion> ediciones = service.getEdiciones();
+        return ResponseEntity.ok(ediciones);
+    }
+    
     
 }
