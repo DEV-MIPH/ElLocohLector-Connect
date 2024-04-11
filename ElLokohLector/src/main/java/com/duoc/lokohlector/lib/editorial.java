@@ -1,14 +1,14 @@
 package com.duoc.lokohlector.lib;
 
-public class editorial {
+public class Editorial {
     
     private int id;
     private String nombre;
 
-    public editorial() {
+    public Editorial() {
     }
 
-    public editorial(int id, String nombre) {
+    public Editorial(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }

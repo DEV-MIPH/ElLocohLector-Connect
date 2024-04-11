@@ -1,13 +1,13 @@
 package com.duoc.lokohlector.lib;
 
-public class categoria {
+public class Categoria {
     private int id;
     private String nombre;
 
-    public categoria() {
+    public Categoria() {
     }
 
-    public categoria(int id, String nombre) {
+    public Categoria(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }

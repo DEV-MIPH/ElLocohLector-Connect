@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.duoc.lokohlector.lib.Libro;
-import com.duoc.lokohlector.lib.autor;
-import com.duoc.lokohlector.lib.categoria;
-import com.duoc.lokohlector.lib.edicion;
-import com.duoc.lokohlector.lib.editorial;
+import com.duoc.lokohlector.lib.Autor;
+import com.duoc.lokohlector.lib.Categoria;
+import com.duoc.lokohlector.lib.Edicion;
+import com.duoc.lokohlector.lib.Editorial;
+import com.duoc.lokohlector.lib.FiltroLibro;
 import com.duoc.lokohlector.service.ElLocohService;
 
 import java.util.List;
@@ -35,28 +36,37 @@ public class ElLocohController {
     }
 
     @GetMapping("/autores")
-    public ResponseEntity<List<autor>> getAutores() {
-        List<autor> autores = service.getAutores();
+    public ResponseEntity<List<Autor>> getAutores() {
+        List<Autor> autores = service.getAutores();
         return ResponseEntity.ok(autores);
     }
 
     @GetMapping("/categorias")
-    public ResponseEntity<List<categoria>> getCategorias() {
-        List<categoria> categorias = service.getCategorias();
+    public ResponseEntity<List<Categoria>> getCategorias() {
+        List<Categoria> categorias = service.getCategorias();
         return ResponseEntity.ok(categorias);
     }
 
     @GetMapping("/editoriales")
-    public ResponseEntity<List<editorial>> getEditoriales() {
-        List<editorial> editoriales = service.getEditoriales();
+    public ResponseEntity<List<Editorial>> getEditoriales() {
+        List<Editorial> editoriales = service.getEditoriales();
         return ResponseEntity.ok(editoriales);
     }
 
     @GetMapping("/ediciones")
-    public ResponseEntity<List<edicion>> getEdiciones() {
-        List<edicion> ediciones = service.getEdiciones();
+    public ResponseEntity<List<Edicion>> getEdiciones() {
+        List<Edicion> ediciones = service.getEdiciones();
         return ResponseEntity.ok(ediciones);
     }
+
+    @PostMapping("/FiltrarLibros")
+    public ResponseEntity<List<Libro>> getFiltrarLibros(@RequestBody FiltroLibro filtro) {
+        List<Libro> libros = service.getLibrosFiltrados(filtro.getTitulo(),filtro.getCategoria(), filtro.getAutor(), filtro.getEditorial(), filtro.getEdicion());
+        return ResponseEntity.ok(libros);
+    }
+
+
+
     
     
 }

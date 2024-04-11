@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import com.duoc.lokohlector.lib.Libro;
-import com.duoc.lokohlector.lib.autor;
-import com.duoc.lokohlector.lib.categoria;
-import com.duoc.lokohlector.lib.edicion;
-import com.duoc.lokohlector.lib.editorial;
+import com.duoc.lokohlector.lib.Autor;
+import com.duoc.lokohlector.lib.Categoria;
+import com.duoc.lokohlector.lib.Edicion;
+import com.duoc.lokohlector.lib.Editorial;
 
 @Repository
 @Mapper
@@ -23,14 +23,15 @@ public interface ElLocohDao {
     public Libro getLibro(@Param("id") int id);
 
     @Select("SELECT * FROM autor;")
-    public List<autor> getAutores();
+    public List<Autor> getAutores();
 
     @Select("SELECT * FROM categoria;")
-    public List<categoria> getCategorias();
+    public List<Categoria> getCategorias();
 
     @Select("SELECT * FROM editorial;")
-    public List<editorial> getEditoriales();
+    public List<Editorial> getEditoriales();
 
     @Select("SELECT * FROM edicion;")
-    public List<edicion> getEdiciones();
+    public List<Edicion> getEdiciones();
+
 }
