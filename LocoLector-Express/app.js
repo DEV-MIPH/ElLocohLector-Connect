@@ -5,8 +5,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const controller_1 = require("./controller/controller");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 3000;
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (origin && origin.includes('localhost')) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('No permitido'));
+        }
+    }
+}));
 app.get('/libros', controller_1.getAllBooksController);
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');

@@ -12,16 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBooks = void 0;
+exports.getBooksCache = exports.getBooks = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const ioredis_1 = __importDefault(require("ioredis"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const redis = new ioredis_1.default(`rediss://default:${process.env.REDIS_TOKEN}@engaging-termite-30271.upstash.io:30271`);
+const NodeCache = require('node-cache');
+const cache = new NodeCache();
+//Cache de libros
 function getBooksService() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const books = yield (0, data_access_layer_1.getAllBooks)();
+            const books = yield (0, data_access_layer_1.getBooksJoin)();
             return books;
         }
         catch (error) {
@@ -60,3 +63,30 @@ function getBooks() {
     });
 }
 exports.getBooks = getBooks;
+//Funcion que obtiene los datos del cache y si no los tiene los obtiene de la base de datos y los guarda en el cache
+function getBooksCache() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const cacheKey = "libros";
+            const tiempoCache = 60;
+            // Intentar obtener los libros de la caché
+            const booksFromCache = cache.get(cacheKey);
+            if (booksFromCache) {
+                console.log("Libros obtenidos de la caché local");
+                return booksFromCache;
+            }
+            // Si no hay libros en la caché, obtenerlos de la base de datos
+            const booksFromDb = yield getBooks();
+            console.log("Libros obtenidos de la base de datos");
+            // Guardar los libros en la caché local para la próxima vez
+            cache.set(cacheKey, booksFromDb, tiempoCache);
+            console.log("Libros guardados en la caché local");
+            return booksFromDb;
+        }
+        catch (error) {
+            console.error("Error al obtener los libros:", error);
+            return [];
+        }
+    });
+}
+exports.getBooksCache = getBooksCache;

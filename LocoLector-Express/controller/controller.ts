@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { getBooks } from '../services/services';
+import { getBooksCache } from '../services/services';
 
 export async function getAllBooksController(req: Request, res: Response) {
     try {
-        const books = await getBooks();
+        const books = await getBooksCache();
         res.status(200).json(books);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);

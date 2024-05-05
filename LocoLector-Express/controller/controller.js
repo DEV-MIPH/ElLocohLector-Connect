@@ -14,7 +14,7 @@ const services_1 = require("../services/services");
 function getAllBooksController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const books = yield (0, services_1.getBooks)();
+            const books = yield (0, services_1.getBooksCache)();
             res.status(200).json(books);
         }
         catch (error) {
