@@ -77,7 +77,6 @@ function getBooksCache() {
             }
             // Si no hay libros en la caché, obtenerlos de la base de datos
             const booksFromDb = yield getBooks();
-            console.log("Libros obtenidos de la base de datos");
             // Guardar los libros en la caché local para la próxima vez
             cache.set(cacheKey, booksFromDb, tiempoCache);
             console.log("Libros guardados en la caché local");
