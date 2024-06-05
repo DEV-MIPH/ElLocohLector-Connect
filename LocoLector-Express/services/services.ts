@@ -56,7 +56,7 @@ export async function getBooksCache() {
 
     try {
         const cacheKey = "libros";
-        const tiempoCache = 60;
+        const tiempoCache = 3600;
 
         // Intentar obtener los libros de la caché
         const booksFromCache = cache.get(cacheKey);

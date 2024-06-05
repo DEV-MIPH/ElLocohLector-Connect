@@ -1,32 +1,26 @@
 import { createClient } from "@libsql/client";
 import dotenv from 'dotenv';
+import { createPool, Pool } from 'mysql2/promise';
 
 // Cargar las variables de entorno desde un archivo .env
 dotenv.config();
 
-// Obtener el URL de la base de datos y asegurarse de que no sea undefined
-const dbUrl = process.env.DATABASE_URL;
-if (!dbUrl) {
-    throw new Error('El URL de la base de datos no está definido en las variables de entorno');
-}
+const pool: Pool = createPool({
+    host: process.env.DATABASE_URL, 
+    user: process.env.USER_DATABASE, 
+    password: process.env.PASSWORD_DATABASE,
+    database: process.env.NAME_DATABASE,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
 
-// Obtener el token de autenticación y asegurarse de que no sea undefined
-const authToken = process.env.AUTH_TOKEN;
-if (!authToken) {
-    throw new Error('El token de autenticación no está definido en las variables de entorno');
-}
 
-// Crear un cliente de base de datos con las credenciales
-const client = createClient({
-    url: dbUrl,
-    authToken: authToken,
-});
 
 // Función para obtener todos los libros de la base de datos
 export async function getAllBooks() {
     try {
-        const result = await client.execute("SELECT * FROM libro;");
-        return result.rows;
+        const [rows] = await pool.query('SELECT * FROM libro;');
+        return rows;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al obtener los libros:', error.message);
@@ -40,8 +34,8 @@ export async function getAllBooks() {
 //Funcion para hacer un join entre las tablas libro , autor , editorial , categoria , edicion
 export async function getBooksJoin() {
     try {
-        const result = await client.execute("SELECT libro.id AS id, libro.titulo AS titulo,autor.nombre AS Autor,categoria.nombre AS Categoria,editorial.nombre AS Editorial, edicion.nombre AS edicion,libro.cantidad AS cantidad FROM libro JOIN autor ON autor.id = libro.autor JOIN categoria ON libro.categoria = categoria.id JOIN editorial ON libro.editorial = editorial.id JOIN edicion ON libro.edicion = edicion.id;");
-        return result.rows;
+        const [rows] = await pool.query('SELECT * FROM libros_view;');
+        return rows;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al obtener los libros:', error.message);
@@ -50,13 +44,14 @@ export async function getBooksJoin() {
         }
         return [];
     }
+    
 }
 
 //Funcion para obtener todos los autores de la base de datos
 export async function getAllAuthors() {
     try {
-        const result = await client.execute("SELECT * FROM autor;");
-        return result.rows;
+        const [rows] = await pool.query('SELECT * FROM autor;');
+        return rows;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al obtener los autores:', error.message);
@@ -70,8 +65,8 @@ export async function getAllAuthors() {
 //Funcion para obtener todas las categorias de la base de datos
 export async function getAllCategories() {
     try {
-        const result = await client.execute("SELECT * FROM categoria;");
-        return result.rows;
+        const [rows] = await pool.query('SELECT * FROM categoria;');
+        return rows;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al obtener las categorias:', error.message);
@@ -85,8 +80,8 @@ export async function getAllCategories() {
 //Funcion para obtener todas las editoriales de la base de datos
 export async function getAllEditorials() {
     try {
-        const result = await client.execute("SELECT * FROM editorial;");
-        return result.rows;
+        const [rows] = await pool.query('SELECT * FROM editorial;');
+        return rows;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al obtener las editoriales:', error.message);
@@ -98,11 +93,10 @@ export async function getAllEditorials() {
 }
 
 //Funcion para obtener todas las ediciones de la base de datos
-
 export async function getAllEditions() {
     try {
-        const result = await client.execute("SELECT * FROM edicion;");
-        return result.rows;
+        const [rows] = await pool.query('SELECT * FROM edicion;');
+        return rows;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al obtener las ediciones:', error.message);
@@ -112,7 +106,3 @@ export async function getAllEditions() {
         return [];
     }
 }
-
-
-
-

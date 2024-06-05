@@ -68,7 +68,7 @@ function getBooksCache() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const cacheKey = "libros";
-            const tiempoCache = 60;
+            const tiempoCache = 3600;
             // Intentar obtener los libros de la caché
             const booksFromCache = cache.get(cacheKey);
             if (booksFromCache) {

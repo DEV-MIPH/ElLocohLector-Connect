@@ -13,31 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
-const client_1 = require("@libsql/client");
 const dotenv_1 = __importDefault(require("dotenv"));
+const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
 dotenv_1.default.config();
-// Obtener el URL de la base de datos y asegurarse de que no sea undefined
-const dbUrl = process.env.DATABASE_URL;
-if (!dbUrl) {
-    throw new Error('El URL de la base de datos no está definido en las variables de entorno');
-}
-// Obtener el token de autenticación y asegurarse de que no sea undefined
-const authToken = process.env.AUTH_TOKEN;
-if (!authToken) {
-    throw new Error('El token de autenticación no está definido en las variables de entorno');
-}
-// Crear un cliente de base de datos con las credenciales
-const client = (0, client_1.createClient)({
-    url: dbUrl,
-    authToken: authToken,
+const pool = (0, promise_1.createPool)({
+    host: process.env.DATABASE_URL,
+    user: process.env.USER_DATABASE,
+    password: process.env.PASSWORD_DATABASE,
+    database: process.env.NAME_DATABASE,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 // Función para obtener todos los libros de la base de datos
 function getAllBooks() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield client.execute("SELECT * FROM libro;");
-            return result.rows;
+            const [rows] = yield pool.query('SELECT * FROM libro;');
+            return rows;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -55,8 +48,8 @@ exports.getAllBooks = getAllBooks;
 function getBooksJoin() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield client.execute("SELECT libro.id AS id, libro.titulo AS titulo,autor.nombre AS Autor,categoria.nombre AS Categoria,editorial.nombre AS Editorial, edicion.nombre AS edicion,libro.cantidad AS cantidad FROM libro JOIN autor ON autor.id = libro.autor JOIN categoria ON libro.categoria = categoria.id JOIN editorial ON libro.editorial = editorial.id JOIN edicion ON libro.edicion = edicion.id;");
-            return result.rows;
+            const [rows] = yield pool.query('SELECT * FROM libros_view;');
+            return rows;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -74,8 +67,8 @@ exports.getBooksJoin = getBooksJoin;
 function getAllAuthors() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield client.execute("SELECT * FROM autor;");
-            return result.rows;
+            const [rows] = yield pool.query('SELECT * FROM autor;');
+            return rows;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -93,8 +86,8 @@ exports.getAllAuthors = getAllAuthors;
 function getAllCategories() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield client.execute("SELECT * FROM categoria;");
-            return result.rows;
+            const [rows] = yield pool.query('SELECT * FROM categoria;');
+            return rows;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -112,8 +105,8 @@ exports.getAllCategories = getAllCategories;
 function getAllEditorials() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield client.execute("SELECT * FROM editorial;");
-            return result.rows;
+            const [rows] = yield pool.query('SELECT * FROM editorial;');
+            return rows;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -131,8 +124,8 @@ exports.getAllEditorials = getAllEditorials;
 function getAllEditions() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield client.execute("SELECT * FROM edicion;");
-            return result.rows;
+            const [rows] = yield pool.query('SELECT * FROM edicion;');
+            return rows;
         }
         catch (error) {
             if (error instanceof Error) {
