@@ -1,24 +1,24 @@
 import express from 'express';
 import { getAllBooksController } from './controller/controller';
 import cors from 'cors';
+import { AddressInfo } from 'net';
 
 const app = express();
 const port = 3000;
 
 app.use(cors({
     origin: (origin, callback) => {
-            if (origin && origin.includes('localhost')) {
-                callback(null, true);
-            } else {
-                callback(new Error('No permitido'));
-            }
+        if (origin && origin.includes('localhost')) {
+            callback(null, true);
+        } else {
+            callback(new Error('No permitido'));
         }
     }
-    )
+}
+)
 );
 
 app.get('/libros', getAllBooksController);
-
 
 
 app.get('/', (req, res) => {
@@ -26,8 +26,14 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`Servidor Express corriendo en http://localhost:${port}`);
+const server = app.listen(port, '127.0.0.1', () => {
+    const address = server.address() as AddressInfo;
+    if (address) {
+        const host = address.address;
+        const port = address.port;
+        console.log(`Servidor corriendo en http://${host}:${port}`);
+    } else {
+        console.error('No se pudo obtener la dirección del servidor');
+    }
 });
-
 
