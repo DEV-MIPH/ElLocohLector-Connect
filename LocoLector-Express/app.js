@@ -10,7 +10,7 @@ const app = (0, express_1.default)();
 const port = 3000;
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
-        if (origin && origin.includes('https://el-locoh-lector.vercel.app/')) {
+        if (origin && origin.includes('localhost')) {
             callback(null, true);
         }
         else {
