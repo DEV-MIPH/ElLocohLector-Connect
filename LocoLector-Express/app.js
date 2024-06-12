@@ -22,14 +22,6 @@ app.get('/libros', controller_1.getAllBooksController);
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });
-const server = app.listen(port, '127.0.0.1', () => {
-    const address = server.address();
-    if (address) {
-        const host = address.address;
-        const port = address.port;
-        console.log(`Servidor corriendo en http://${host}:${port}`);
-    }
-    else {
-        console.error('No se pudo obtener la dirección del servidor');
-    }
+app.listen(port, () => {
+    console.log(`Servidor Express corriendo en http://localhost:${port}`);
 });

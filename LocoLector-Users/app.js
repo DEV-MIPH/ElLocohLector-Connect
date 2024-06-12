@@ -13,25 +13,72 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const firebaseConfig_1 = __importDefault(require("./services/firebaseConfig"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
+const lokolector_firebase_json_1 = __importDefault(require("./lokolector-firebase.json"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
+// Cargar variables de entorno desde el archivo .env
+dotenv_1.default.config();
 const app = (0, express_1.default)();
-const port = process.env.PORT || 3001;
-app.use(express_1.default.json());
-// Ruta protegida
-app.get('/protected', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const idToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split('Bearer ')[1];
-    if (!idToken) {
-        return res.status(401).send('No token provided.');
-    }
-    try {
-        const decodedToken = yield firebaseConfig_1.default.auth().verifyIdToken(idToken);
-        return res.status(200).send(`Hello, ${decodedToken.email}`);
-    }
-    catch (error) {
-        return res.status(401).send('Invalid token.');
+// Inicializar la app de Firebase
+firebase_admin_1.default.initializeApp({
+    credential: firebase_admin_1.default.credential.cert(lokolector_firebase_json_1.default)
+});
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (origin && origin.includes('localhost')) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('No permitido'));
+        }
     }
 }));
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// Configurar Express
+app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: true }));
+// Ruta para logear usuarios
+app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        // Verificar el usuario con Firebase
+        const userRecord = yield firebase_admin_1.default.auth().getUserByEmail(email);
+        if (!userRecord) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        // Autenticar el usuario
+        const customToken = yield firebase_admin_1.default.auth().createCustomToken(userRecord.uid);
+        res.status(200).json({ token: customToken });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}));
+// Ruta para crear un nuevo usuario
+app.post('/create-user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, displayName } = req.body;
+    try {
+        const userRecord = yield firebase_admin_1.default.auth().createUser({
+            email,
+            password,
+            displayName,
+        });
+        res.status(201).json({
+            message: 'Usuario creado exitosamente',
+            user: {
+                uid: userRecord.uid,
+                email: userRecord.email,
+                displayName: userRecord.displayName,
+            }
+        });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}));
+// Iniciar el servidor
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
