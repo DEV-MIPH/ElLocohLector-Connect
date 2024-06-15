@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions } from '../data-access-layer/data-access-layer';
 import Redis from "ioredis";
 import dotenv from 'dotenv';
 
@@ -93,5 +93,49 @@ export async function getAutorService() {
         return [];
     }
 }
+
+export async function getCategoriasService() {
+    try {
+        const categorias = await getAllCategories();
+        return categorias;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
+export async function getEditorialesService() {
+    try {
+        const editoriales = await getAllEditorials();
+        return editoriales;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
+export async function getEdicionesService() {
+    try {
+        const ediciones = await getAllEditions();
+        return ediciones;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
+
 
 

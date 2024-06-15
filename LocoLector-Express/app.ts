@@ -1,6 +1,11 @@
 import express from 'express';
+
 import { getAllBooksController } from './controller/controller';
 import { getAllAutoresController } from './controller/controller';
+import { getAllCategoriasController } from './controller/controller';
+import { getAllEditorialesController } from './controller/controller';
+import { getAllEdicionesController } from './controller/controller';
+
 import cors from 'cors';
 
 const app = express();
@@ -21,6 +26,12 @@ app.use(cors({
 app.get('/libros', getAllBooksController);
 
 app.get('/autores', getAllAutoresController);
+
+app.get('/categorias', getAllCategoriasController);
+
+app.get('/editoriales', getAllEditorialesController);
+
+app.get('/ediciones', getAllEdicionesController);
 
 
 

@@ -9,9 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllAutoresController = exports.getAllBooksController = void 0;
+exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
+const services_3 = require("../services/services");
+const services_4 = require("../services/services");
+const services_5 = require("../services/services");
 function getAllBooksController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -38,3 +41,42 @@ function getAllAutoresController(req, res) {
     });
 }
 exports.getAllAutoresController = getAllAutoresController;
+function getAllCategoriasController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const categorias = yield (0, services_3.getCategoriasService)();
+            res.status(200).json(categorias);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getAllCategoriasController = getAllCategoriasController;
+function getAllEditorialesController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const editoriales = yield (0, services_4.getEditorialesService)();
+            res.status(200).json(editoriales);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getAllEditorialesController = getAllEditorialesController;
+function getAllEdicionesController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const ediciones = yield (0, services_5.getEdicionesService)();
+            res.status(200).json(ediciones);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getAllEdicionesController = getAllEdicionesController;
