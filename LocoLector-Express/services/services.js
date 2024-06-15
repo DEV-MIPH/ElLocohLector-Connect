@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBooksCache = exports.getBooks = void 0;
+exports.getAutorService = exports.getBooksCache = exports.getBooks = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const ioredis_1 = __importDefault(require("ioredis"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -89,3 +89,21 @@ function getBooksCache() {
     });
 }
 exports.getBooksCache = getBooksCache;
+function getAutorService() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const autor = yield (0, data_access_layer_1.getAllAuthors)();
+            return autor;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return [];
+        }
+    });
+}
+exports.getAutorService = getAutorService;

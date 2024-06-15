@@ -1,4 +1,4 @@
-import { getBooksJoin } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin } from '../data-access-layer/data-access-layer';
 import Redis from "ioredis";
 import dotenv from 'dotenv';
 
@@ -79,4 +79,19 @@ export async function getBooksCache() {
         return [];
     }
 }
+
+export async function getAutorService() {
+    try {
+        const autor = await getAllAuthors();
+        return autor;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
 

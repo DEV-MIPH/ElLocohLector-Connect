@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllBooksController = void 0;
+exports.getAllAutoresController = exports.getAllBooksController = void 0;
 const services_1 = require("../services/services");
+const services_2 = require("../services/services");
 function getAllBooksController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -24,3 +25,16 @@ function getAllBooksController(req, res) {
     });
 }
 exports.getAllBooksController = getAllBooksController;
+function getAllAutoresController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const autor = yield (0, services_2.getAutorService)();
+            res.status(200).json(autor);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getAllAutoresController = getAllAutoresController;
