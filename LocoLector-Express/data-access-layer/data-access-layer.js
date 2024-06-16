@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -244,3 +244,24 @@ function postEditionData(edition) {
     });
 }
 exports.postEditionData = postEditionData;
+//Funcion para agregar un ejemplar a la tabla ejemplar
+function postEjemplarData(ejemplar) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const sql = 'INSERT INTO ejemplar SET ?';
+            const result = yield pool.query(sql, ejemplar);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar el ejemplar:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEjemplarData = postEjemplarData;

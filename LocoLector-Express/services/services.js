@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = void 0;
+exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const ioredis_1 = __importDefault(require("ioredis"));
@@ -198,10 +198,10 @@ function postBookService(book) {
     });
 }
 exports.postBookService = postBookService;
-function postAutorService(book) {
+function postAutorService(Autor) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newAutor = yield (0, data_access_layer_2.postAuthorData)(book);
+            const newAutor = yield (0, data_access_layer_2.postAuthorData)(Autor);
             return newAutor;
         }
         catch (error) {
@@ -216,10 +216,10 @@ function postAutorService(book) {
     });
 }
 exports.postAutorService = postAutorService;
-function postCategoriaService(book) {
+function postCategoriaService(Categoria) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newCategoria = yield (0, data_access_layer_2.postCategoryData)(book);
+            const newCategoria = yield (0, data_access_layer_2.postCategoryData)(Categoria);
             return newCategoria;
         }
         catch (error) {
@@ -234,10 +234,10 @@ function postCategoriaService(book) {
     });
 }
 exports.postCategoriaService = postCategoriaService;
-function postEditorialService(book) {
+function postEditorialService(Editorial) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newEditorial = yield (0, data_access_layer_2.postEditorialData)(book);
+            const newEditorial = yield (0, data_access_layer_2.postEditorialData)(Editorial);
             return newEditorial;
         }
         catch (error) {
@@ -252,10 +252,10 @@ function postEditorialService(book) {
     });
 }
 exports.postEditorialService = postEditorialService;
-function postEdicionService(book) {
+function postEdicionService(Edicion) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newEdicion = yield (0, data_access_layer_2.postEditionData)(book);
+            const newEdicion = yield (0, data_access_layer_2.postEditionData)(Edicion);
             return newEdicion;
         }
         catch (error) {
@@ -270,3 +270,21 @@ function postEdicionService(book) {
     });
 }
 exports.postEdicionService = postEdicionService;
+function postEjemplarService(Ejemplar) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newEjemplar = yield (0, data_access_layer_2.postEjemplarData)(Ejemplar);
+            return newEjemplar;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEjemplarService = postEjemplarService;

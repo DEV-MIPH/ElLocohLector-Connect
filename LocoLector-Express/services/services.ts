@@ -1,5 +1,5 @@
 import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks } from '../data-access-layer/data-access-layer';
-import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData } from '../data-access-layer/data-access-layer';
+import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData,postEjemplarData } from '../data-access-layer/data-access-layer';
 
 import Redis from "ioredis";
 import dotenv from 'dotenv';
@@ -169,9 +169,9 @@ export async function postBookService(book: any) {
     
 }
 
-export async function postAutorService(book: any) {
+export async function postAutorService(Autor: any) {
     try {
-        const newAutor = await postAuthorData(book);
+        const newAutor = await postAuthorData(Autor);
         return newAutor;
     } catch (error) {
         if (error instanceof Error) {
@@ -183,9 +183,9 @@ export async function postAutorService(book: any) {
     }
 }
 
-export async function postCategoriaService(book: any) {
+export async function postCategoriaService(Categoria: any) {
     try {
-        const newCategoria = await postCategoryData(book);
+        const newCategoria = await postCategoryData(Categoria);
         return newCategoria;
     } catch (error) {
         if (error instanceof Error) {
@@ -198,9 +198,9 @@ export async function postCategoriaService(book: any) {
     
 }
 
-export async function postEditorialService(book: any) {
+export async function postEditorialService(Editorial: any) {
     try {
-        const newEditorial = await postEditorialData(book);
+        const newEditorial = await postEditorialData(Editorial);
         return newEditorial;
     } catch (error) {
         if (error instanceof Error) {
@@ -212,10 +212,24 @@ export async function postEditorialService(book: any) {
     } 
 }
 
-export async function postEdicionService(book: any) {
+export async function postEdicionService(Edicion: any) {
     try {
-        const newEdicion = await postEditionData(book);
+        const newEdicion = await postEditionData(Edicion);
         return newEdicion;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+export async function postEjemplarService(Ejemplar: any) {
+    try {
+        const newEjemplar = await postEjemplarData(Ejemplar);
+        return newEjemplar;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error:', error.message);

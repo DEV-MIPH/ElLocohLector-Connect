@@ -1,7 +1,8 @@
 import express from 'express';
 
 import { getAllBooksCacheController, getAllBooksController, postAutorController, postBookController, 
-    postCategoriaController, postEdicionController, postEditorialController } from './controller/controller';
+    postCategoriaController, postEdicionController, postEditorialController, 
+    postEjemplarController} from './controller/controller';
 
 import { getAllAutoresController } from './controller/controller';
 import { getAllCategoriasController } from './controller/controller';
@@ -49,6 +50,8 @@ app.post('/categorias', postCategoriaController);
 app.post('/editoriales', postEditorialController);
 
 app.post('/ediciones', postEdicionController);
+
+app.post('/ejemplares', postEjemplarController);
 
 
 app.get('/', (req, res) => {

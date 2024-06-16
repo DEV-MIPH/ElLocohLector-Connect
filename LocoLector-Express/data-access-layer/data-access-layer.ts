@@ -7,11 +7,11 @@ import { ResultSetHeader } from 'mysql2/promise';
 dotenv.config();
 
 interface Book {
-    title: string;
-    author: number;
-    category: number;
+    titulo_libro: string;
+    autor: number;
+    categoria: number;
     editorial: number;
-    edition: number;
+    edicion: number;
 }
 
 interface Author {
@@ -29,6 +29,14 @@ interface Editorial {
 
 interface Edition {
     edicion: string;
+}
+
+interface Ejemplar {
+    id_libro: number;
+    id_pedido: number;
+    id_estado: number;
+    descripcion_ejemplar: string;
+    cantidad_pedido: number;
 }
 
 const pool: Pool = createPool({
@@ -213,6 +221,23 @@ export async function postEditionData(edition: Edition): Promise<boolean> {
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al insertar la edicion:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+//Funcion para agregar un ejemplar a la tabla ejemplar
+export async function postEjemplarData(ejemplar: Ejemplar): Promise<boolean> {
+    try {
+        const sql = 'INSERT INTO ejemplar SET ?'; 
+        const result = await pool.query(sql, ejemplar); 
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar el ejemplar:', error.message);
         } else {
             console.error('Error desconocido:', error);
         }

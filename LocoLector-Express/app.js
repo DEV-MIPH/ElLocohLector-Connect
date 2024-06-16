@@ -34,6 +34,7 @@ app.post('/autores', controller_1.postAutorController);
 app.post('/categorias', controller_1.postCategoriaController);
 app.post('/editoriales', controller_1.postEditorialController);
 app.post('/ediciones', controller_1.postEdicionController);
+app.post('/ejemplares', controller_1.postEjemplarController);
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });

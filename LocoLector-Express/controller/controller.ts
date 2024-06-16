@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getBooks, getBooksCache, getAllBooksService } from '../services/services';
+import { getBooks, getBooksCache, getAllBooksService, postEjemplarService } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
@@ -128,5 +128,18 @@ export async function postEdicionController(req: Request, res: Response) {
     }
 
 }
+
+export async function postEjemplarController(req: Request, res: Response) {
+    try {
+        const edicion = await postEjemplarService(req.body);
+        res.status(201).json(edicion);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al postear un libro' });
+    }
+
+}
+
+
 
 

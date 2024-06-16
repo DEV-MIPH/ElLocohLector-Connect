@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
+exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
 const services_3 = require("../services/services");
@@ -163,3 +163,16 @@ function postEdicionController(req, res) {
     });
 }
 exports.postEdicionController = postEdicionController;
+function postEjemplarController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const edicion = yield (0, services_1.postEjemplarService)(req.body);
+            res.status(201).json(edicion);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un libro' });
+        }
+    });
+}
+exports.postEjemplarController = postEjemplarController;
