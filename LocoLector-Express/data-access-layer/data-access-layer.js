@@ -143,7 +143,8 @@ exports.getAllEditions = getAllEditions;
 function postBookData(book) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield pool.query('INSERT INTO libro SET ?', book);
+            const sql = 'INSERT INTO libro SET ?';
+            const result = yield pool.query(sql, book);
             const resultSetHeader = result[0];
             return resultSetHeader.affectedRows > 0;
         }
@@ -163,9 +164,8 @@ exports.postBookData = postBookData;
 function postAuthorData(author) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log(author);
-            const sql = 'INSERT INTO libro(nombre_autor,apellido_autor) VALUES(?,?)';
-            const result = yield pool.query(sql, [author.nombre_autor, author.apellido_autor]);
+            const sql = 'INSERT INTO autor SET ?';
+            const result = yield pool.query(sql, author);
             const resultSetHeader = result[0];
             return resultSetHeader.affectedRows > 0;
         }
@@ -185,7 +185,8 @@ exports.postAuthorData = postAuthorData;
 function postCategoryData(category) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield pool.query('INSERT INTO categoria SET ?', category);
+            const sql = 'INSERT INTO categoria SET ?';
+            const result = yield pool.query(sql, category);
             const resultSetHeader = result[0];
             return resultSetHeader.affectedRows > 0;
         }
@@ -205,7 +206,8 @@ exports.postCategoryData = postCategoryData;
 function postEditorialData(editorial) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield pool.query('INSERT INTO editorial SET ?', editorial);
+            const sql = 'INSERT INTO editorial SET ?';
+            const result = yield pool.query(sql, editorial);
             const resultSetHeader = result[0];
             return resultSetHeader.affectedRows > 0;
         }
@@ -225,7 +227,8 @@ exports.postEditorialData = postEditorialData;
 function postEditionData(edition) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = yield pool.query('INSERT INTO edicion SET ?', edition);
+            const sql = 'INSERT INTO edicion SET ?';
+            const result = yield pool.query(sql, edition);
             const resultSetHeader = result[0];
             return resultSetHeader.affectedRows > 0;
         }

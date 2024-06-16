@@ -100,10 +100,9 @@ function getAllEdicionesController(req, res) {
 exports.getAllEdicionesController = getAllEdicionesController;
 function postBookController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const nuevoLibro = req.body;
         try {
-            const libro = yield (0, services_6.postBookService)(nuevoLibro);
-            res.status(201).json(libro);
+            const book = yield (0, services_6.postBookService)(req.body);
+            res.status(201).json(book);
         }
         catch (error) {
             console.error('Error en el controlador de libros:', error);
@@ -127,9 +126,8 @@ function postAutorController(req, res) {
 exports.postAutorController = postAutorController;
 function postCategoriaController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const nuevaCategoria = req.body;
         try {
-            const categoria = yield (0, services_8.postCategoriaService)(nuevaCategoria);
+            const categoria = yield (0, services_8.postCategoriaService)(req.body);
             res.status(201).json(categoria);
         }
         catch (error) {
@@ -141,9 +139,8 @@ function postCategoriaController(req, res) {
 exports.postCategoriaController = postCategoriaController;
 function postEditorialController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const nuevaEditorial = req.body;
         try {
-            const editorial = yield (0, services_9.postEditorialService)(nuevaEditorial);
+            const editorial = yield (0, services_9.postEditorialService)(req.body);
             res.status(201).json(editorial);
         }
         catch (error) {
@@ -155,9 +152,8 @@ function postEditorialController(req, res) {
 exports.postEditorialController = postEditorialController;
 function postEdicionController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const nuevaEdicion = req.body;
         try {
-            const edicion = yield (0, services_10.postEdicionService)(nuevaEdicion);
+            const edicion = yield (0, services_10.postEdicionService)(req.body);
             res.status(201).json(edicion);
         }
         catch (error) {

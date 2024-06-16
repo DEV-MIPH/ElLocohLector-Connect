@@ -12,6 +12,7 @@ const controller_5 = require("./controller/controller");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 3000;
+app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
         if (origin && origin.includes('localhost')) {

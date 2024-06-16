@@ -155,7 +155,6 @@ export async function getEdicionesService() {
 }
 
 export async function postBookService(book: any) {
-    
     try {
         const newBook = await postBookData(book);
         return newBook;
@@ -167,26 +166,24 @@ export async function postBookService(book: any) {
         }
         return false;
     }
-
+    
 }
 
 export async function postAutorService(book: any) {
-        
-        try {
-            const newAutor = await postAuthorData(book);
-            return newAutor;
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error('Error:', error.message);
-            } else {
-                console.error('Error desconocido:', error);
-            }
-            return false;
+    try {
+        const newAutor = await postAuthorData(book);
+        return newAutor;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
         }
+        return false;
+    }
 }
 
 export async function postCategoriaService(book: any) {
-        
     try {
         const newCategoria = await postCategoryData(book);
         return newCategoria;
@@ -198,10 +195,10 @@ export async function postCategoriaService(book: any) {
         }
         return false;
     }
+    
 }
 
 export async function postEditorialService(book: any) {
-        
     try {
         const newEditorial = await postEditorialData(book);
         return newEditorial;
@@ -212,11 +209,10 @@ export async function postEditorialService(book: any) {
             console.error('Error desconocido:', error);
         }
         return false;
-    }
+    } 
 }
 
 export async function postEdicionService(book: any) {
-        
     try {
         const newEdicion = await postEditionData(book);
         return newEdicion;

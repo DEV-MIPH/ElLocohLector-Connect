@@ -20,15 +20,15 @@ interface Author {
 }
 
 interface Category {
-    name: string;
+    nombre_categoria: string;
 }
 
 interface Editorial {
-    name: string;
+    nombre_editorial: string;
 }
 
 interface Edition {
-    name: string;
+    edicion: string;
 }
 
 const pool: Pool = createPool({
@@ -135,7 +135,8 @@ export async function getAllEditions() {
 //Funcion para postear un libro en la base de datos
 export async function postBookData(book: Book): Promise<boolean> {
     try {
-        const result = await pool.query('INSERT INTO libro SET ?', book);
+        const sql = 'INSERT INTO libro SET ?'; 
+        const result = await pool.query(sql, book); 
         const resultSetHeader = result[0] as ResultSetHeader;
         return resultSetHeader.affectedRows > 0;
     } catch (error) {
@@ -151,9 +152,8 @@ export async function postBookData(book: Book): Promise<boolean> {
 //Funcion para postear un autor en la base de datos
 export async function postAuthorData(author: Author): Promise<boolean> {
     try {
-        console.log(author);
-        const sql = 'INSERT INTO libro(nombre_autor,apellido_autor) VALUES(?,?)'; 
-        const result = await pool.query(sql, [author.nombre_autor,author.apellido_autor]); 
+        const sql = 'INSERT INTO autor SET ?'; 
+        const result = await pool.query(sql, author); 
         const resultSetHeader = result[0] as ResultSetHeader;
         return resultSetHeader.affectedRows > 0;
     } catch (error) {
@@ -170,7 +170,8 @@ export async function postAuthorData(author: Author): Promise<boolean> {
 //Funcion para postear una categoria en la base de datos
 export async function postCategoryData(category: Category): Promise<boolean> {
     try {
-        const result = await pool.query('INSERT INTO categoria SET ?', category);
+        const sql = 'INSERT INTO categoria SET ?'; 
+        const result = await pool.query(sql, category); 
         const resultSetHeader = result[0] as ResultSetHeader;
         return resultSetHeader.affectedRows > 0;
     } catch (error) {
@@ -184,10 +185,12 @@ export async function postCategoryData(category: Category): Promise<boolean> {
 }
 
 
+
 //Funcion para postear una editorial en la base de datos
 export async function postEditorialData(editorial: Editorial): Promise<boolean> {
     try {
-        const result = await pool.query('INSERT INTO editorial SET ?', editorial);
+        const sql = 'INSERT INTO editorial SET ?'; 
+        const result = await pool.query(sql, editorial); 
         const resultSetHeader = result[0] as ResultSetHeader;
         return resultSetHeader.affectedRows > 0;
     } catch (error) {
@@ -200,11 +203,11 @@ export async function postEditorialData(editorial: Editorial): Promise<boolean> 
     }
 }
 
-
 //Funcion para postear una edicion en la base de datos
 export async function postEditionData(edition: Edition): Promise<boolean> {
     try {
-        const result = await pool.query('INSERT INTO edicion SET ?', edition);
+        const sql = 'INSERT INTO edicion SET ?'; 
+        const result = await pool.query(sql, edition); 
         const resultSetHeader = result[0] as ResultSetHeader;
         return resultSetHeader.affectedRows > 0;
     } catch (error) {

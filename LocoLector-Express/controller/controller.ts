@@ -76,14 +76,14 @@ export async function getAllEdicionesController(req: Request, res: Response) {
 }
 
 export async function postBookController(req: Request, res: Response) {
-    const nuevoLibro = req.body;
     try {
-        const libro = await postBookService(nuevoLibro);
-        res.status(201).json(libro);
+        const book = await postBookService(req.body);
+        res.status(201).json(book);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al postear un libro' });
     }
+    
 }
 
 export async function postAutorController(req: Request, res: Response) {
@@ -98,9 +98,8 @@ export async function postAutorController(req: Request, res: Response) {
 }
 
 export async function postCategoriaController(req: Request, res: Response) {
-    const nuevaCategoria = req.body;
     try {
-        const categoria = await postCategoriaService(nuevaCategoria);
+        const categoria = await postCategoriaService(req.body);
         res.status(201).json(categoria);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -109,25 +108,25 @@ export async function postCategoriaController(req: Request, res: Response) {
 }
 
 export async function postEditorialController(req: Request, res: Response) {
-    const nuevaEditorial = req.body;
     try {
-        const editorial = await postEditorialService(nuevaEditorial);
+        const editorial = await postEditorialService(req.body);
         res.status(201).json(editorial);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al postear un libro' });
     }
+   
 }
 
 export async function postEdicionController(req: Request, res: Response) {
-    const nuevaEdicion = req.body;
     try {
-        const edicion = await postEdicionService(nuevaEdicion);
+        const edicion = await postEdicionService(req.body);
         res.status(201).json(edicion);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al postear un libro' });
     }
+
 }
 
 
