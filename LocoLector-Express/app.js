@@ -9,19 +9,19 @@ const controller_2 = require("./controller/controller");
 const controller_3 = require("./controller/controller");
 const controller_4 = require("./controller/controller");
 const controller_5 = require("./controller/controller");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 3000;
-// app.use(cors({
-//     origin: (origin, callback) => {
-//             if (origin && origin.includes('localhost')) {
-//                 callback(null, true);
-//             } else {
-//                 callback(new Error('No permitido'));
-//             }
-//         }
-//     }
-//     )
-// );
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (origin && origin.includes('localhost')) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('No permitido'));
+        }
+    }
+}));
 app.get('/libros', controller_1.getAllBooksCacheController);
 app.get('/all_libros', controller_1.getAllBooksController);
 app.get('/autores', controller_2.getAllAutoresController);
