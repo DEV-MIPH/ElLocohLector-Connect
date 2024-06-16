@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = void 0;
+exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
+const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const ioredis_1 = __importDefault(require("ioredis"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -38,6 +39,24 @@ function getBooksService() {
         }
     });
 }
+function getAllBooksService() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const books = yield (0, data_access_layer_1.getAllBooks)();
+            return books;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return [];
+        }
+    });
+}
+exports.getAllBooksService = getAllBooksService;
 function getBooks() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -161,3 +180,93 @@ function getEdicionesService() {
     });
 }
 exports.getEdicionesService = getEdicionesService;
+function postBookService(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newBook = yield (0, data_access_layer_2.postBookData)(book);
+            return newBook;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postBookService = postBookService;
+function postAutorService(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newAutor = yield (0, data_access_layer_2.postAuthorData)(book);
+            return newAutor;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postAutorService = postAutorService;
+function postCategoriaService(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newCategoria = yield (0, data_access_layer_2.postCategoryData)(book);
+            return newCategoria;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postCategoriaService = postCategoriaService;
+function postEditorialService(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newEditorial = yield (0, data_access_layer_2.postEditorialData)(book);
+            return newEditorial;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEditorialService = postEditorialService;
+function postEdicionService(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newEdicion = yield (0, data_access_layer_2.postEditionData)(book);
+            return newEdicion;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEdicionService = postEdicionService;

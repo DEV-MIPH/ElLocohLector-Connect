@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -139,3 +139,105 @@ function getAllEditions() {
     });
 }
 exports.getAllEditions = getAllEditions;
+//Funcion para postear un libro en la base de datos
+function postBookData(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield pool.query('INSERT INTO libro SET ?', book);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar el libro:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postBookData = postBookData;
+//Funcion para postear un autor en la base de datos
+function postAuthorData(author) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log(author);
+            const sql = 'INSERT INTO libro(nombre_autor,apellido_autor) VALUES(?,?)';
+            const result = yield pool.query(sql, [author.nombre_autor, author.apellido_autor]);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar el autor:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postAuthorData = postAuthorData;
+//Funcion para postear una categoria en la base de datos
+function postCategoryData(category) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield pool.query('INSERT INTO categoria SET ?', category);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar la categoria:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postCategoryData = postCategoryData;
+//Funcion para postear una editorial en la base de datos
+function postEditorialData(editorial) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield pool.query('INSERT INTO editorial SET ?', editorial);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar la editorial:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEditorialData = postEditorialData;
+//Funcion para postear una edicion en la base de datos
+function postEditionData(edition) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield pool.query('INSERT INTO edicion SET ?', edition);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar la edicion:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEditionData = postEditionData;

@@ -1,4 +1,6 @@
-import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks } from '../data-access-layer/data-access-layer';
+import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData } from '../data-access-layer/data-access-layer';
+
 import Redis from "ioredis";
 import dotenv from 'dotenv';
 
@@ -25,6 +27,22 @@ async function getBooksService() {
         return [];
     }
 }
+
+export async function getAllBooksService() {
+    try {
+        const books = await getAllBooks();
+        return books;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
+
 
 export async function getBooks() {
     try {
@@ -136,6 +154,79 @@ export async function getEdicionesService() {
     }
 }
 
+export async function postBookService(book: any) {
+    
+    try {
+        const newBook = await postBookData(book);
+        return newBook;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
 
+}
 
+export async function postAutorService(book: any) {
+        
+        try {
+            const newAutor = await postAuthorData(book);
+            return newAutor;
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            } else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+}
+
+export async function postCategoriaService(book: any) {
+        
+    try {
+        const newCategoria = await postCategoryData(book);
+        return newCategoria;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+export async function postEditorialService(book: any) {
+        
+    try {
+        const newEditorial = await postEditorialData(book);
+        return newEditorial;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+export async function postEdicionService(book: any) {
+        
+    try {
+        const newEdicion = await postEditionData(book);
+        return newEdicion;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
 

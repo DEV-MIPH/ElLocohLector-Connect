@@ -1,9 +1,35 @@
 import { createClient } from "@libsql/client";
 import dotenv from 'dotenv';
 import { createPool, Pool } from 'mysql2/promise';
+import { ResultSetHeader } from 'mysql2/promise';
 
 // Cargar las variables de entorno desde un archivo .env
 dotenv.config();
+
+interface Book {
+    title: string;
+    author: number;
+    category: number;
+    editorial: number;
+    edition: number;
+}
+
+interface Author {
+    nombre_autor: string;
+    apellido_autor: string;
+}
+
+interface Category {
+    name: string;
+}
+
+interface Editorial {
+    name: string;
+}
+
+interface Edition {
+    name: string;
+}
 
 const pool: Pool = createPool({
     host: process.env.DATABASE_URL, 
@@ -43,8 +69,7 @@ export async function getBooksJoin() {
             console.error('Error desconocido:', error);
         }
         return [];
-    }
-    
+    } 
 }
 
 //Funcion para obtener todos los autores de la base de datos
@@ -104,5 +129,90 @@ export async function getAllEditions() {
             console.error('Error desconocido:', error);
         }
         return [];
+    }
+}
+
+//Funcion para postear un libro en la base de datos
+export async function postBookData(book: Book): Promise<boolean> {
+    try {
+        const result = await pool.query('INSERT INTO libro SET ?', book);
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar el libro:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+//Funcion para postear un autor en la base de datos
+export async function postAuthorData(author: Author): Promise<boolean> {
+    try {
+        console.log(author);
+        const sql = 'INSERT INTO libro(nombre_autor,apellido_autor) VALUES(?,?)'; 
+        const result = await pool.query(sql, [author.nombre_autor,author.apellido_autor]); 
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar el autor:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+
+//Funcion para postear una categoria en la base de datos
+export async function postCategoryData(category: Category): Promise<boolean> {
+    try {
+        const result = await pool.query('INSERT INTO categoria SET ?', category);
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar la categoria:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+
+//Funcion para postear una editorial en la base de datos
+export async function postEditorialData(editorial: Editorial): Promise<boolean> {
+    try {
+        const result = await pool.query('INSERT INTO editorial SET ?', editorial);
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar la editorial:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+
+//Funcion para postear una edicion en la base de datos
+export async function postEditionData(edition: Edition): Promise<boolean> {
+    try {
+        const result = await pool.query('INSERT INTO edicion SET ?', edition);
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar la edicion:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
     }
 }

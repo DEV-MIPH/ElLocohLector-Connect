@@ -9,16 +9,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = void 0;
+exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
 const services_3 = require("../services/services");
 const services_4 = require("../services/services");
 const services_5 = require("../services/services");
-function getAllBooksController(req, res) {
+const services_6 = require("../services/services");
+const services_7 = require("../services/services");
+const services_8 = require("../services/services");
+const services_9 = require("../services/services");
+const services_10 = require("../services/services");
+function getAllBooksCacheController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const books = yield (0, services_1.getBooksCache)();
+            res.status(200).json(books);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getAllBooksCacheController = getAllBooksCacheController;
+function getAllBooksController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const books = yield (0, services_1.getAllBooksService)();
             res.status(200).json(books);
         }
         catch (error) {
@@ -80,3 +98,72 @@ function getAllEdicionesController(req, res) {
     });
 }
 exports.getAllEdicionesController = getAllEdicionesController;
+function postBookController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const nuevoLibro = req.body;
+        try {
+            const libro = yield (0, services_6.postBookService)(nuevoLibro);
+            res.status(201).json(libro);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un libro' });
+        }
+    });
+}
+exports.postBookController = postBookController;
+function postAutorController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const autor = yield (0, services_7.postAutorService)(req.body);
+            res.status(201).json(autor);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un libro' });
+        }
+    });
+}
+exports.postAutorController = postAutorController;
+function postCategoriaController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const nuevaCategoria = req.body;
+        try {
+            const categoria = yield (0, services_8.postCategoriaService)(nuevaCategoria);
+            res.status(201).json(categoria);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un libro' });
+        }
+    });
+}
+exports.postCategoriaController = postCategoriaController;
+function postEditorialController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const nuevaEditorial = req.body;
+        try {
+            const editorial = yield (0, services_9.postEditorialService)(nuevaEditorial);
+            res.status(201).json(editorial);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un libro' });
+        }
+    });
+}
+exports.postEditorialController = postEditorialController;
+function postEdicionController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const nuevaEdicion = req.body;
+        try {
+            const edicion = yield (0, services_10.postEdicionService)(nuevaEdicion);
+            res.status(201).json(edicion);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un libro' });
+        }
+    });
+}
+exports.postEdicionController = postEdicionController;
