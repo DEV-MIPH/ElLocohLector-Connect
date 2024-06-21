@@ -1,21 +1,20 @@
-// Firebase
-const admin = require('firebase-admin');
-const serviceAccount = require('./lokolector-firebase.json');
+import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import admin from 'firebase-admin';
+import serviceAccount from './lokolector-firebase.json';
 
 // Inicializar la app de Firebase
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
 });
 
 // Configurar Express
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
 const app = express();
 
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       if (origin && origin.includes('localhost')) {
         callback(null, true);
       } else {
@@ -24,30 +23,30 @@ app.use(
     },
   })
 );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Ruta para logear usuarios
-app.post('/login', async (req, res) => {
+app.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    // Verificar el usuario con Firebase
-    const userRecord = await admin.auth().getUserByEmail(email);
-    if (!userRecord) {
-      console.log('Usuario no encontrado');
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-
-    // Autenticar el usuario
-    const customToken = await admin.auth().createCustomToken(userRecord.uid);
+    // Autenticar el usuario con email y contraseña
+    const user = await admin.auth().getUserByEmail(email);
+    const customToken = await admin.auth().createCustomToken(user.uid);
+    // Aquí deberías usar el SDK de Firebase para cliente en una app frontend para autenticar
     res.status(200).json({ token: customToken });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(400).json({ message: 'Unknown error occurred' });
+    }
   }
 });
 
 // Ruta para crear un nuevo usuario
-app.post('/create-user', async (req, res) => {
+app.post('/create-user', async (req: Request, res: Response) => {
   const { email, password, displayName } = req.body;
   try {
     const userRecord = await admin.auth().createUser({
@@ -64,8 +63,12 @@ app.post('/create-user', async (req, res) => {
         displayName: userRecord.displayName,
       },
     });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(400).json({ message: 'Unknown error occurred' });
+    }
   }
 });
 

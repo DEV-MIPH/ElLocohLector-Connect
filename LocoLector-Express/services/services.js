@@ -184,6 +184,8 @@ function postBookService(book) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const newBook = yield (0, data_access_layer_2.postBookData)(book);
+            //limpiar cache
+            cache.flushAll();
             return newBook;
         }
         catch (error) {

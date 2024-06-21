@@ -140,6 +140,8 @@ exports.postCategoriaController = postCategoriaController;
 function postEditorialController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log("Editorial nueva");
+            console.log(req.body);
             const editorial = yield (0, services_9.postEditorialService)(req.body);
             res.status(201).json(editorial);
         }

@@ -10,6 +10,8 @@ import { getAllEditorialesController } from './controller/controller';
 import { getAllEdicionesController } from './controller/controller';
 
 import cors from 'cors';
+import emailRoutes from './routes/emailRoutes';
+import { sendEmail } from './controller/emailController';
 
 
 const app = express();
@@ -52,6 +54,8 @@ app.post('/editoriales', postEditorialController);
 app.post('/ediciones', postEdicionController);
 
 app.post('/ejemplares', postEjemplarController);
+
+app.post('/send-email', sendEmail);
 
 
 app.get('/', (req, res) => {

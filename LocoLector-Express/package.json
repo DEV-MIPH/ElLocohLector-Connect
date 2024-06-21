@@ -15,12 +15,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "google-auth-library": "^9.11.0",
+    "googleapis": "^140.0.0",
     "ioredis": "^5.4.1",
     "mysql2": "^3.10.0",
     "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.14",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17"
+    "@types/cors": "^2.8.17",
+    "@types/nodemailer": "^6.4.15"
   }
 }

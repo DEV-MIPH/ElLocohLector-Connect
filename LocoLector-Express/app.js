@@ -10,6 +10,7 @@ const controller_3 = require("./controller/controller");
 const controller_4 = require("./controller/controller");
 const controller_5 = require("./controller/controller");
 const cors_1 = __importDefault(require("cors"));
+const emailController_1 = require("./controller/emailController");
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json());
@@ -35,6 +36,7 @@ app.post('/categorias', controller_1.postCategoriaController);
 app.post('/editoriales', controller_1.postEditorialController);
 app.post('/ediciones', controller_1.postEdicionController);
 app.post('/ejemplares', controller_1.postEjemplarController);
+app.post('/send-email', emailController_1.sendEmail);
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });

@@ -87,7 +87,6 @@ export async function postBookController(req: Request, res: Response) {
 }
 
 export async function postAutorController(req: Request, res: Response) {
-
     try {
         const autor = await postAutorService(req.body);
         res.status(201).json(autor);
@@ -109,6 +108,8 @@ export async function postCategoriaController(req: Request, res: Response) {
 
 export async function postEditorialController(req: Request, res: Response) {
     try {
+        console.log("Editorial nueva" )
+        console.log(req.body);
         const editorial = await postEditorialService(req.body);
         res.status(201).json(editorial);
     } catch (error) {

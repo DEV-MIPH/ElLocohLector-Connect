@@ -157,6 +157,8 @@ export async function getEdicionesService() {
 export async function postBookService(book: any) {
     try {
         const newBook = await postBookData(book);
+        //limpiar cache
+        cache.flushAll();
         return newBook;
     } catch (error) {
         if (error instanceof Error) {
