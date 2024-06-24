@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { getBooks, getBooksCache, getAllBooksService, postEjemplarService } from '../services/services';
+import { getBooksCache, postEjemplarService, postNewBook } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
 import { getEdicionesService } from '../services/services';
-import { postBookService } from '../services/services';
+import { getBooksService } from '../services/services';
 import { postAutorService } from '../services/services';
 import { postCategoriaService } from '../services/services';
 import { postEditorialService } from '../services/services';
@@ -20,12 +20,11 @@ export async function getAllBooksCacheController(req: Request, res: Response) {
         res.status(500).json({ message: 'Error al obtener los libros' });
     }
 
-    
 }
 
 export async function getAllBooksController(req: Request, res: Response) {
     try {
-        const books = await getAllBooksService();
+        const books = await getBooksService();
         res.status(200).json(books);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -77,7 +76,7 @@ export async function getAllEdicionesController(req: Request, res: Response) {
 
 export async function postBookController(req: Request, res: Response) {
     try {
-        const book = await postBookService(req.body);
+        const book = await postNewBook(req.body);
         res.status(201).json(book);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);

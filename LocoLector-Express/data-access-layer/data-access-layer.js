@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -265,3 +265,99 @@ function postEjemplarData(ejemplar) {
     });
 }
 exports.postEjemplarData = postEjemplarData;
+//Funcion para obtener un autor por su nombre y retorna su id
+function getAuthorByName(name, apellido) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_autor FROM autor WHERE nombre_autor = ? and apellido_autor = ?', [name, apellido]);
+            if (rows.length > 0) {
+                return rows[0].id_autor;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener el autor:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getAuthorByName = getAuthorByName;
+//Funcion para obtener un editorial por su nombre
+function getEditorialByName(name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_editorial FROM editorial WHERE nombre_editorial = ?', [name]);
+            if (rows.length > 0) {
+                return rows[0].id_editorial;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener la editorial:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getEditorialByName = getEditorialByName;
+//Funcion para obtener una categoria por su nombre
+function getCategoryByName(name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_categoria FROM categoria WHERE nombre_categoria = ?', [name]);
+            if (rows.length > 0) {
+                return rows[0].id_categoria;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener la categoria:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getCategoryByName = getCategoryByName;
+//Funcion para obtener una edicion por su nombre y retorne su id
+function getEditionByName(name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_edicion FROM edicion WHERE edicion = ?', [name]);
+            if (rows.length > 0) {
+                return rows[0].id_edicion;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener la edicion:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getEditionByName = getEditionByName;

@@ -36,7 +36,7 @@ exports.getAllBooksCacheController = getAllBooksCacheController;
 function getAllBooksController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const books = yield (0, services_1.getAllBooksService)();
+            const books = yield (0, services_6.getBooksService)();
             res.status(200).json(books);
         }
         catch (error) {
@@ -101,7 +101,7 @@ exports.getAllEdicionesController = getAllEdicionesController;
 function postBookController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const book = yield (0, services_6.postBookService)(req.body);
+            const book = yield (0, services_1.postNewBook)(req.body);
             res.status(201).json(book);
         }
         catch (error) {

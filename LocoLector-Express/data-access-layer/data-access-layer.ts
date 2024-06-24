@@ -244,3 +244,87 @@ export async function postEjemplarData(ejemplar: Ejemplar): Promise<boolean> {
         return false;
     }
 }
+
+//Funcion para obtener un autor por su nombre y retorna su id
+export async function getAuthorByName(name: string, apellido:string): Promise<number | null> {
+    try {
+        const [rows]: any[] = await pool.query('SELECT id_autor FROM autor WHERE nombre_autor = ? and apellido_autor = ?', [name,apellido]);
+        if (rows.length > 0) {
+            return rows[0].id_autor;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener el autor:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+
+//Funcion para obtener un editorial por su nombre
+export async function getEditorialByName(name: string) {
+    try{
+        const [rows]: any[] = await pool.query('SELECT id_editorial FROM editorial WHERE nombre_editorial = ?', [name]);
+        if (rows.length > 0) {
+            return rows[0].id_editorial;
+        } else {
+            return null;
+        }
+    
+    }catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener la editorial:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+//Funcion para obtener una categoria por su nombre
+export async function getCategoryByName(name: string) {
+    try{
+        const [rows]: any[] = await pool.query('SELECT id_categoria FROM categoria WHERE nombre_categoria = ?', [name]);
+        if (rows.length > 0) {
+            return rows[0].id_categoria;
+        } else {
+            return null;
+        }
+    
+    }catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener la categoria:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+    
+}
+
+//Funcion para obtener una edicion por su nombre y retorne su id
+export async function getEditionByName(name: string) {
+    try{
+        const [rows]: any[] = await pool.query('SELECT id_edicion FROM edicion WHERE edicion = ?', [name]);
+        if (rows.length > 0) {
+            return rows[0].id_edicion;
+        } else {
+            return null;
+        }
+    
+    }catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener la edicion:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+
+

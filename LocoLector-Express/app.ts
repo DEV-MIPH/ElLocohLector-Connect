@@ -43,6 +43,8 @@ app.get('/editoriales', getAllEditorialesController);
 
 app.get('/ediciones', getAllEdicionesController);
 
+app.get('/librosadmin', getAllBooksController);
+
 app.post('/libros', postBookController);
 
 app.post('/autores', postAutorController);

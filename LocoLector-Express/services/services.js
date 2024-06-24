@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = void 0;
+exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postNewBook = exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
+const data_access_layer_3 = require("../data-access-layer/data-access-layer");
 const ioredis_1 = __importDefault(require("ioredis"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -39,6 +40,7 @@ function getBooksService() {
         }
     });
 }
+exports.getBooksService = getBooksService;
 function getAllBooksService() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -290,3 +292,138 @@ function postEjemplarService(Ejemplar) {
     });
 }
 exports.postEjemplarService = postEjemplarService;
+function postNewBook(book) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const libroCreado = {
+            titulo_libro: book.titulo_libro,
+            autor: 0,
+            categoria: 0,
+            editorial: 0,
+            edicion: 0
+        };
+        const { firstName, lastName } = splitName(book.autor);
+        if (!(yield searchAutor(firstName, lastName))) {
+            yield postAutorService({ nombre_autor: firstName, apellido_autor: lastName });
+            console.log("Autor nuevo creado " + book.autor);
+            if ((yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName)) != null) {
+                libroCreado.autor = yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName)) != null) {
+                libroCreado.autor = yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName);
+            }
+        }
+        if (!(yield searchCategoria(book.categoria))) {
+            yield postCategoriaService({ nombre_categoria: book.categoria });
+            console.log("Categoria nueva creada " + book.categoria);
+            if ((yield (0, data_access_layer_3.getCategoryByName)(book.categoria)) != null) {
+                libroCreado.categoria = yield (0, data_access_layer_3.getCategoryByName)(book.categoria);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getCategoryByName)(book.categoria)) != null) {
+                libroCreado.categoria = yield (0, data_access_layer_3.getCategoryByName)(book.categoria);
+            }
+        }
+        if (!(yield searchEditorial(book.editorial))) {
+            yield postEditorialService({ nombre_editorial: book.editorial });
+            console.log("Editorial nueva creada " + book.editorial);
+            if ((yield (0, data_access_layer_3.getEditorialByName)(book.editorial)) != null) {
+                libroCreado.editorial = yield (0, data_access_layer_3.getEditorialByName)(book.editorial);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getEditorialByName)(book.editorial)) != null) {
+                libroCreado.editorial = yield (0, data_access_layer_3.getEditorialByName)(book.editorial);
+            }
+        }
+        if (!(yield searchEdicion(book.edicion))) {
+            yield postEdicionService({ edicion: book.edicion });
+            console.log("Edicion nueva creada " + book.edicion);
+            if ((yield (0, data_access_layer_3.getEditionByName)(book.edicion)) != null) {
+                libroCreado.edicion = yield (0, data_access_layer_3.getEditionByName)(book.edicion);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getEditionByName)(book.edicion)) != null) {
+                libroCreado.edicion = yield (0, data_access_layer_3.getEditionByName)(book.edicion);
+            }
+        }
+        try {
+            const newBook = yield postBookService(libroCreado);
+            console.log("Libro nuevo creado " + libroCreado.titulo_libro);
+            return newBook;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.postNewBook = postNewBook;
+function searchAutor(autor, apellido) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const autorBuscado = yield (0, data_access_layer_3.getAuthorByName)(autor, apellido);
+            if (autorBuscado) {
+                return true;
+            }
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+function searchCategoria(categoria) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const categoriaBuscada = yield (0, data_access_layer_3.getCategoryByName)(categoria);
+            if (categoriaBuscada) {
+                return true;
+            }
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.searchCategoria = searchCategoria;
+function searchEditorial(editorial) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const editorialBuscada = yield (0, data_access_layer_3.getEditorialByName)(editorial);
+            if (editorialBuscada) {
+                return true;
+            }
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.searchEditorial = searchEditorial;
+function searchEdicion(edicion) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const edicionBuscada = yield (0, data_access_layer_3.getEditionByName)(edicion);
+            if (edicionBuscada) {
+                return true;
+            }
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.searchEdicion = searchEdicion;
+function splitName(fullName) {
+    const nameParts = fullName.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ');
+    return { firstName, lastName };
+}

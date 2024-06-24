@@ -1,5 +1,6 @@
 import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks } from '../data-access-layer/data-access-layer';
 import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData,postEjemplarData } from '../data-access-layer/data-access-layer';
+import { getAuthorByName,getEditorialByName, getEditionByName,getCategoryByName } from '../data-access-layer/data-access-layer';
 
 import Redis from "ioredis";
 import dotenv from 'dotenv';
@@ -11,10 +12,26 @@ const redis = new Redis(`rediss://default:${process.env.REDIS_TOKEN}@engaging-te
 const NodeCache = require('node-cache');
 const cache = new NodeCache();
 
+interface Book {
+    titulo_libro: string;
+    autor: string;
+    categoria: string;
+    editorial: string;
+    edicion: string;
+}
+
+interface NewBook{
+    titulo_libro: string;
+    autor: number | null;
+    categoria: number | null;
+    editorial: number | null;
+    edicion: number | null;
+}
+
 //Cache de libros
 
 
-async function getBooksService() {
+export async function getBooksService() {
     try {
         const books = await getBooksJoin();
         return books;
@@ -242,3 +259,126 @@ export async function postEjemplarService(Ejemplar: any) {
     }
 }
 
+export async function postNewBook(book: Book) {
+    const libroCreado: NewBook = {
+        titulo_libro: book.titulo_libro,
+        autor: 0,
+        categoria: 0,
+        editorial: 0,
+        edicion: 0
+    }
+    const { firstName, lastName } = splitName(book.autor);
+    if(!await searchAutor(firstName, lastName)){
+        
+        await postAutorService({nombre_autor: firstName, apellido_autor: lastName});
+        console.log("Autor nuevo creado "+ book.autor)
+        if(await getAuthorByName(firstName, lastName) != null){
+            libroCreado.autor = await getAuthorByName(firstName, lastName);
+        }
+    }else{
+        if(await getAuthorByName(firstName, lastName) != null){
+            libroCreado.autor = await getAuthorByName(firstName, lastName);
+        }
+    }
+        
+
+    if(!await searchCategoria(book.categoria)){
+        await postCategoriaService({nombre_categoria: book.categoria});
+        console.log("Categoria nueva creada "+ book.categoria)
+        if(await getCategoryByName(book.categoria) != null){
+            libroCreado.categoria = await getCategoryByName(book.categoria);
+        }
+    }else{
+        if(await getCategoryByName(book.categoria) != null){
+            libroCreado.categoria = await getCategoryByName(book.categoria);
+        }
+    }
+
+    if(!await searchEditorial(book.editorial)){
+        await postEditorialService({nombre_editorial: book.editorial});
+        console.log("Editorial nueva creada "+ book.editorial)
+        if(await getEditorialByName(book.editorial) != null){
+            libroCreado.editorial = await getEditorialByName(book.editorial);
+        }
+    }else{
+        if(await getEditorialByName(book.editorial) != null){
+            libroCreado.editorial = await getEditorialByName(book.editorial);
+        }
+    }
+
+    if(!await searchEdicion(book.edicion)){
+        await postEdicionService({edicion: book.edicion});
+        console.log("Edicion nueva creada "+ book.edicion)
+        if(await getEditionByName(book.edicion) != null){
+            libroCreado.edicion = await getEditionByName(book.edicion);
+        }
+    }else{
+        if(await getEditionByName(book.edicion) != null){
+            libroCreado.edicion = await getEditionByName(book.edicion);
+        }
+    }
+
+    try {
+        const newBook = await postBookService(libroCreado);
+        console.log("Libro nuevo creado "+ libroCreado.titulo_libro)
+        return newBook;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+async function searchAutor(autor: string, apellido: string) {
+    try {
+        const autorBuscado = await getAuthorByName(autor,apellido);
+        if(autorBuscado){
+           return true;
+        }
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+export async function searchCategoria(categoria: string) {
+    try {
+        const categoriaBuscada = await getCategoryByName(categoria);
+        if(categoriaBuscada){
+           return true;
+        }
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+export async function searchEditorial(editorial: string) {
+    try {
+        const editorialBuscada = await getEditorialByName(editorial);
+        if(editorialBuscada){
+           return true;
+        }
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+export async function searchEdicion(edicion: string) {
+    try {
+        const edicionBuscada = await getEditionByName(edicion);
+        if(edicionBuscada){
+           return true;
+        }
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+function splitName(fullName: string) {
+    const nameParts = fullName.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ');
+    return { firstName, lastName };
+}

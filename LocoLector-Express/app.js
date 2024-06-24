@@ -30,6 +30,7 @@ app.get('/autores', controller_2.getAllAutoresController);
 app.get('/categorias', controller_3.getAllCategoriasController);
 app.get('/editoriales', controller_4.getAllEditorialesController);
 app.get('/ediciones', controller_5.getAllEdicionesController);
+app.get('/librosadmin', controller_1.getAllBooksController);
 app.post('/libros', controller_1.postBookController);
 app.post('/autores', controller_1.postAutorController);
 app.post('/categorias', controller_1.postCategoriaController);
