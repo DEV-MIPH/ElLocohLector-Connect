@@ -371,5 +371,19 @@ export async function postUserData(user: Usuario): Promise<boolean> {
     }
 }
 
+export async function getAdmins() {
+    try {
+        const [rows] = await pool.query('SELECT email_usuario FROM usuario WHERE id_tipo_usuario = 1;');
+        return rows;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener los administradores:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
 
 

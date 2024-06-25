@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getBooksCache, postEjemplarService, postNewBook } from '../services/services';
+import { getAllAdminService, getBooksCache, postEjemplarService, postNewBook } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
@@ -150,6 +150,16 @@ export async function postNewUser(req: Request, res: Response) {
         res.status(500).json({ message: 'Error al postear un libro' });
     }
 
+}
+
+export async function getAllAdminController(req: Request, res: Response) {
+    try {
+        const books = await getAllAdminService();
+        res.status(200).json(books);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al obtener los libros' });
+    }
 }
 
 
