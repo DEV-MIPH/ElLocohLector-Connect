@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks, postUserData } from '../data-access-layer/data-access-layer';
 import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData,postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName,getEditorialByName, getEditionByName,getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -27,6 +27,23 @@ interface NewBook{
     editorial: number | null;
     edicion: number | null;
 }
+
+interface Ejemplar{
+    id_libro: number;
+    id_pedido: number;
+    id_estado: number;
+    descripcion_ejemplar: string;
+    cantidad_ejemplar: number;
+}
+
+interface Usuario {
+    nombre_usuario: string;
+    email_usuario: string;
+    fono_usuario: string;
+    cel_usuario: string;
+    id_tipo_usuario: number;
+}
+
 
 //Cache de libros
 
@@ -88,7 +105,6 @@ export async function getBooks() {
 }
 //Funcion que obtiene los datos del cache y si no los tiene los obtiene de la base de datos y los guarda en el cache
 export async function getBooksCache() {
-
     try {
         const cacheKey = "libros";
         const tiempoCache = 3600;
@@ -259,6 +275,7 @@ export async function postEjemplarService(Ejemplar: any) {
     }
 }
 
+//Funcion para crear un nuevo libro con los datos del libro y los datos de autor, categoria, editorial y edicion
 export async function postNewBook(book: Book) {
     const libroCreado: NewBook = {
         titulo_libro: book.titulo_libro,
@@ -269,7 +286,6 @@ export async function postNewBook(book: Book) {
     }
     const { firstName, lastName } = splitName(book.autor);
     if(!await searchAutor(firstName, lastName)){
-        
         await postAutorService({nombre_autor: firstName, apellido_autor: lastName});
         console.log("Autor nuevo creado "+ book.autor)
         if(await getAuthorByName(firstName, lastName) != null){
@@ -280,7 +296,6 @@ export async function postNewBook(book: Book) {
             libroCreado.autor = await getAuthorByName(firstName, lastName);
         }
     }
-        
 
     if(!await searchCategoria(book.categoria)){
         await postCategoriaService({nombre_categoria: book.categoria});
@@ -328,6 +343,29 @@ export async function postNewBook(book: Book) {
     }
 }
 
+//Funcion para postear ejemplares de un libro
+export async function postEjemplar(ejemplar: Ejemplar) {
+    const ejemplarCreado: Ejemplar = {
+        id_libro: ejemplar.id_libro,
+        id_pedido: ejemplar.id_pedido,
+        id_estado: ejemplar.id_estado,
+        descripcion_ejemplar: ejemplar.descripcion_ejemplar,
+        cantidad_ejemplar: ejemplar.cantidad_ejemplar
+    }
+
+
+
+
+    try {
+        const newEjemplar = await postEjemplarService(ejemplar);
+        return newEjemplar;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+//Funciones para buscar si existe un autor, categoria, editorial o edicion
 async function searchAutor(autor: string, apellido: string) {
     try {
         const autorBuscado = await getAuthorByName(autor,apellido);
@@ -376,6 +414,18 @@ export async function searchEdicion(edicion: string) {
     }
 }
 
+//funcion para agregar un usuario a la base de datos
+export async function postUser(user: Usuario) {
+    try {
+        const newUser = await postUserData(user);
+        return newUser;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+}
+
+//Funcion para separar el nombre del autor en nombre y apellido
 function splitName(fullName: string) {
     const nameParts = fullName.trim().split(' ');
     const firstName = nameParts[0];

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postNewBook = exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplar = exports.postNewBook = exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -292,6 +292,7 @@ function postEjemplarService(Ejemplar) {
     });
 }
 exports.postEjemplarService = postEjemplarService;
+//Funcion para crear un nuevo libro con los datos del libro y los datos de autor, categoria, editorial y edicion
 function postNewBook(book) {
     return __awaiter(this, void 0, void 0, function* () {
         const libroCreado = {
@@ -362,6 +363,28 @@ function postNewBook(book) {
     });
 }
 exports.postNewBook = postNewBook;
+//Funcion para postear ejemplares de un libro
+function postEjemplar(ejemplar) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const ejemplarCreado = {
+            id_libro: ejemplar.id_libro,
+            id_pedido: ejemplar.id_pedido,
+            id_estado: ejemplar.id_estado,
+            descripcion_ejemplar: ejemplar.descripcion_ejemplar,
+            cantidad_ejemplar: ejemplar.cantidad_ejemplar
+        };
+        try {
+            const newEjemplar = yield postEjemplarService(ejemplar);
+            return newEjemplar;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.postEjemplar = postEjemplar;
+//Funciones para buscar si existe un autor, categoria, editorial o edicion
 function searchAutor(autor, apellido) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -421,6 +444,21 @@ function searchEdicion(edicion) {
     });
 }
 exports.searchEdicion = searchEdicion;
+//funcion para agregar un usuario a la base de datos
+function postUser(user) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const newUser = yield (0, data_access_layer_1.postUserData)(user);
+            return newUser;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.postUser = postUser;
+//Funcion para separar el nombre del autor en nombre y apellido
 function splitName(fullName) {
     const nameParts = fullName.trim().split(' ');
     const firstName = nameParts[0];

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -361,3 +361,48 @@ function getEditionByName(name) {
     });
 }
 exports.getEditionByName = getEditionByName;
+//Funcion para obtener un libro por su titulo, autor, categoria, editorial, edicion y retorne su id 
+function getBookByData(titulo, autor, categoria, editorial, edicion) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_libro FROM libros_view WHERE titulo = ? and Autor = ? and Categoria = ? and Editorial = ? and Edicion = ?', [titulo, autor, categoria, editorial, edicion]);
+            if (rows.length > 0) {
+                return rows[0].id_libro;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener el libro:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getBookByData = getBookByData;
+//Funcion para agregar un usuario a la base de datos
+function postUserData(user) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const sql = 'INSERT INTO usuario SET ?';
+            const result = yield pool.query(sql, user);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar el usuario:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postUserData = postUserData;

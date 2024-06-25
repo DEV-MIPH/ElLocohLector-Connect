@@ -39,6 +39,14 @@ interface Ejemplar {
     cantidad_pedido: number;
 }
 
+interface Usuario {
+    nombre_usuario: string;
+    email_usuario: string;
+    fono_usuario: string;
+    cel_usuario: string;
+    id_tipo_usuario: number;
+}
+
 const pool: Pool = createPool({
     host: process.env.DATABASE_URL, 
     user: process.env.USER_DATABASE, 
@@ -323,6 +331,43 @@ export async function getEditionByName(name: string) {
             console.error('Error desconocido:', error);
         }
         return null;
+    }
+}
+
+//Funcion para obtener un libro por su titulo, autor, categoria, editorial, edicion y retorne su id 
+export async function getBookByData(titulo: string, autor: string, categoria: string, editorial: string, edicion: string) {
+    try{
+        const [rows]: any[] = await pool.query('SELECT id_libro FROM libros_view WHERE titulo = ? and Autor = ? and Categoria = ? and Editorial = ? and Edicion = ?', [titulo,autor,categoria,editorial,edicion]);
+        if (rows.length > 0) {
+            return rows[0].id_libro;
+        } else {
+            return null;
+        }
+    
+    }catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener el libro:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+//Funcion para agregar un usuario a la base de datos
+export async function postUserData(user: Usuario): Promise<boolean> {
+    try {
+        const sql = 'INSERT INTO usuario SET ?'; 
+        const result = await pool.query(sql, user); 
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar el usuario:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
     }
 }
 

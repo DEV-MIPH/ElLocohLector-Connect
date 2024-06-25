@@ -38,6 +38,7 @@ app.post('/editoriales', controller_1.postEditorialController);
 app.post('/ediciones', controller_1.postEdicionController);
 app.post('/ejemplares', controller_1.postEjemplarController);
 app.post('/send-email', emailController_1.sendEmail);
+app.post('/addUser', controller_1.postNewUser);
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });

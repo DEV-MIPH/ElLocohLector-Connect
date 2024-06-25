@@ -2,7 +2,8 @@ import express from 'express';
 
 import { getAllBooksCacheController, getAllBooksController, postAutorController, postBookController, 
     postCategoriaController, postEdicionController, postEditorialController, 
-    postEjemplarController} from './controller/controller';
+    postEjemplarController,
+    postNewUser} from './controller/controller';
 
 import { getAllAutoresController } from './controller/controller';
 import { getAllCategoriasController } from './controller/controller';
@@ -10,7 +11,6 @@ import { getAllEditorialesController } from './controller/controller';
 import { getAllEdicionesController } from './controller/controller';
 
 import cors from 'cors';
-import emailRoutes from './routes/emailRoutes';
 import { sendEmail } from './controller/emailController';
 
 
@@ -58,6 +58,8 @@ app.post('/ediciones', postEdicionController);
 app.post('/ejemplares', postEjemplarController);
 
 app.post('/send-email', sendEmail);
+
+app.post('/addUser', postNewUser);
 
 
 app.get('/', (req, res) => {

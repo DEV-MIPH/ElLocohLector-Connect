@@ -9,6 +9,7 @@ import { postAutorService } from '../services/services';
 import { postCategoriaService } from '../services/services';
 import { postEditorialService } from '../services/services';
 import { postEdicionService } from '../services/services';
+import { postUser } from '../services/services';
 
 
 export async function getAllBooksCacheController(req: Request, res: Response) {
@@ -133,6 +134,17 @@ export async function postEjemplarController(req: Request, res: Response) {
     try {
         const edicion = await postEjemplarService(req.body);
         res.status(201).json(edicion);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al postear un libro' });
+    }
+
+}
+
+export async function postNewUser(req: Request, res: Response) {
+    try {
+        const user = await postUser(req.body);
+        res.status(201).json(user);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al postear un libro' });
