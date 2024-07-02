@@ -385,5 +385,20 @@ export async function getAdmins() {
     }
 }
 
+export async function getViewEjemplares(){
+    try {
+        const [rows] = await pool.query('SELECT * FROM ejemplares_view;');
+        return rows;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener los ejemplares:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+    
+
 
 

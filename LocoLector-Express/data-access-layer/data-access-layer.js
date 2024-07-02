@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -424,3 +424,21 @@ function getAdmins() {
     });
 }
 exports.getAdmins = getAdmins;
+function getViewEjemplares() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT * FROM ejemplares_view;');
+            return rows;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener los ejemplares:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return [];
+        }
+    });
+}
+exports.getViewEjemplares = getViewEjemplares;

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getAllAdminController, getAllBooksCacheController, getAllBooksController, postAutorController, postBookController, 
+import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getViewEjemplaresController, postAutorController, postBookController, 
     postCategoriaController, postEdicionController, postEditorialController, 
     postEjemplarController,
     postNewUser} from './controller/controller';
@@ -19,17 +19,17 @@ const port = 3000;
 
 app.use(express.json());
 
-app.use(cors({
-    origin: (origin, callback) => {
-            if (origin && origin.includes('localhost')) {
-                callback(null, true);
-            } else {
-                callback(new Error('No permitido'));
-            }
-        }
-    }
-    )
-);
+// app.use(cors({
+//     origin: (origin, callback) => {
+//             if (origin && origin.includes('localhost')) {
+//                 callback(null, true);
+//             } else {
+//                 callback(new Error('No permitido'));
+//             }
+//         }
+//     }
+//     )
+// );
 
 app.get('/libros', getAllBooksCacheController);
 
@@ -46,6 +46,8 @@ app.get('/ediciones', getAllEdicionesController);
 app.get('/librosadmin', getAllBooksController);
 
 app.get('/getadmins', getAllAdminController);
+
+app.get('/ejemplares', getViewEjemplaresController);
 
 app.post('/libros', postBookController);
 

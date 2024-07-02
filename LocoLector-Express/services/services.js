@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplar = exports.postNewBook = exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplar = exports.postNewBook = exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -471,6 +471,19 @@ function getAllAdminService() {
     });
 }
 exports.getAllAdminService = getAllAdminService;
+function getViewEjemplaresService() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const books = yield (0, data_access_layer_1.getViewEjemplares)();
+            return books;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return [];
+        }
+    });
+}
+exports.getViewEjemplaresService = getViewEjemplaresService;
 //Funcion para separar el nombre del autor en nombre y apellido
 function splitName(fullName) {
     const nameParts = fullName.trim().split(' ');
