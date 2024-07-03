@@ -172,6 +172,17 @@ export async function getViewEjemplaresController(req: Request, res: Response) {
     }
 }
 
+export async function postNewEjemplar(req: Request, res: Response): Promise<void> {
+    try {
+        const book = await postEjemplarService(req.body);
+        res.status(201).json(book);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al postear un libro' });
+    }
+
+}
+
 
 
 

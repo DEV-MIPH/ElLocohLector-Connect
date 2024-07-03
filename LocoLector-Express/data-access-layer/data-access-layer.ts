@@ -31,13 +31,24 @@ interface Edition {
     edicion: string;
 }
 
-interface Ejemplar {
+interface EjemplarData {
     id_libro: number;
-    id_pedido: number;
+    id_pedido: number| null;
     id_estado: number;
     descripcion_ejemplar: string;
     cantidad_pedido: number;
 }
+
+interface Ejemplar {
+    nombre_libro: string;
+    nombre_autor: string;
+    nombre_categoria: string;
+    nombre_editorial: string;
+    edicion: string;
+    descripcion: string;
+}
+
+
 
 interface Usuario {
     nombre_usuario: string;
@@ -45,6 +56,11 @@ interface Usuario {
     fono_usuario: string;
     cel_usuario: string;
     id_tipo_usuario: number;
+}
+
+interface Pedido {
+    fecha_pedido: string;
+    id_usuario: number;
 }
 
 const pool: Pool = createPool({
@@ -236,22 +252,9 @@ export async function postEditionData(edition: Edition): Promise<boolean> {
     }
 }
 
-//Funcion para agregar un ejemplar a la tabla ejemplar
-export async function postEjemplarData(ejemplar: Ejemplar): Promise<boolean> {
-    try {
-        const sql = 'INSERT INTO ejemplar SET ?'; 
-        const result = await pool.query(sql, ejemplar); 
-        const resultSetHeader = result[0] as ResultSetHeader;
-        return resultSetHeader.affectedRows > 0;
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error('Error al insertar el ejemplar:', error.message);
-        } else {
-            console.error('Error desconocido:', error);
-        }
-        return false;
-    }
-}
+
+
+
 
 //Funcion para obtener un autor por su nombre y retorna su id
 export async function getAuthorByName(name: string, apellido:string): Promise<number | null> {
@@ -336,10 +339,11 @@ export async function getEditionByName(name: string) {
 
 //Funcion para obtener un libro por su titulo, autor, categoria, editorial, edicion y retorne su id 
 export async function getBookByData(titulo: string, autor: string, categoria: string, editorial: string, edicion: string) {
+    console.log(titulo,autor,categoria,editorial,edicion);
     try{
-        const [rows]: any[] = await pool.query('SELECT id_libro FROM libros_view WHERE titulo = ? and Autor = ? and Categoria = ? and Editorial = ? and Edicion = ?', [titulo,autor,categoria,editorial,edicion]);
+        const [rows]: any[] = await pool.query('SELECT id FROM libros_view WHERE titulo = ? and Autor = ? and Categoria = ? and Editorial = ? and Edicion = ?', [titulo,autor,categoria,editorial,edicion]);
         if (rows.length > 0) {
-            return rows[0].id_libro;
+            return rows[0].id;
         } else {
             return null;
         }
@@ -398,6 +402,73 @@ export async function getViewEjemplares(){
         return [];
     }
 }
+
+//Funcion para agregar un ejemplar a la tabla ejemplar
+export async function postEjemplarData(ejemplar: EjemplarData): Promise<boolean> {
+    try {
+        const sql = 'INSERT INTO ejemplar SET ?'; 
+        const result = await pool.query(sql, ejemplar); 
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar el ejemplar:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+}
+
+//Post para agregar un nuevo Pedido que retorna el id del pedido
+export async function postPedidoData(id_usuario: number): Promise<number | null> {
+    const today: Date = new Date();
+    const year: number = today.getFullYear();
+    const month: string = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day: string = today.getDate().toString().padStart(2, '0');
+    const formattedDate: string = `${year}-${month}-${day}`;
+    const pedido: Pedido = {
+        fecha_pedido: formattedDate,
+        id_usuario: id_usuario
+    }
+    try {
+        const sql = 'INSERT INTO pedido SET ?'; 
+        const result = await pool.query(sql, pedido);
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.insertId;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al insertar el pedido:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+//Funcion para obtener un usuario por su correo y retorne su id
+export async function getUserByEmail(email: string) {
+    try{
+        const [rows]: any[] = await pool.query('SELECT id_usuario FROM usuario WHERE email_usuario = ?', [email]);
+        if (rows.length > 0) {
+            return rows[0].id_usuario;
+        } else {
+            return null;
+        }
+    
+    }catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener el usuario:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+
+
     
 
 

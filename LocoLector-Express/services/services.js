@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplar = exports.postNewBook = exports.postEjemplarService = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -274,24 +274,6 @@ function postEdicionService(Edicion) {
     });
 }
 exports.postEdicionService = postEdicionService;
-function postEjemplarService(Ejemplar) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const newEjemplar = yield (0, data_access_layer_2.postEjemplarData)(Ejemplar);
-            return newEjemplar;
-        }
-        catch (error) {
-            if (error instanceof Error) {
-                console.error('Error:', error.message);
-            }
-            else {
-                console.error('Error desconocido:', error);
-            }
-            return false;
-        }
-    });
-}
-exports.postEjemplarService = postEjemplarService;
 //Funcion para crear un nuevo libro con los datos del libro y los datos de autor, categoria, editorial y edicion
 function postNewBook(book) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -364,17 +346,20 @@ function postNewBook(book) {
 }
 exports.postNewBook = postNewBook;
 //Funcion para postear ejemplares de un libro
-function postEjemplar(ejemplar) {
+function postEjemplarService(ejemplar) {
     return __awaiter(this, void 0, void 0, function* () {
-        const ejemplarCreado = {
-            id_libro: ejemplar.id_libro,
-            id_pedido: ejemplar.id_pedido,
-            id_estado: ejemplar.id_estado,
-            descripcion_ejemplar: ejemplar.descripcion_ejemplar,
-            cantidad_ejemplar: ejemplar.cantidad_ejemplar
+        const libro = yield (0, data_access_layer_1.getBookByData)(ejemplar.nombre_libro, ejemplar.nombre_autor, ejemplar.nombre_categoria, ejemplar.nombre_editorial, ejemplar.edicion);
+        const pedido = 1;
+        const estado = 5;
+        const ejemplarData = {
+            id_libro: libro,
+            id_pedido: pedido,
+            id_estado: estado,
+            descripcion_ejemplar: ejemplar.descripcion,
+            cantidad_pedido: 1
         };
         try {
-            const newEjemplar = yield postEjemplarService(ejemplar);
+            const newEjemplar = yield (0, data_access_layer_2.postEjemplarData)(ejemplarData);
             return newEjemplar;
         }
         catch (error) {
@@ -383,7 +368,7 @@ function postEjemplar(ejemplar) {
         }
     });
 }
-exports.postEjemplar = postEjemplar;
+exports.postEjemplarService = postEjemplarService;
 //Funciones para buscar si existe un autor, categoria, editorial o edicion
 function searchAutor(autor, apellido) {
     return __awaiter(this, void 0, void 0, function* () {

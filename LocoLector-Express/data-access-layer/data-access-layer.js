@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEjemplarData = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -244,27 +244,6 @@ function postEditionData(edition) {
     });
 }
 exports.postEditionData = postEditionData;
-//Funcion para agregar un ejemplar a la tabla ejemplar
-function postEjemplarData(ejemplar) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const sql = 'INSERT INTO ejemplar SET ?';
-            const result = yield pool.query(sql, ejemplar);
-            const resultSetHeader = result[0];
-            return resultSetHeader.affectedRows > 0;
-        }
-        catch (error) {
-            if (error instanceof Error) {
-                console.error('Error al insertar el ejemplar:', error.message);
-            }
-            else {
-                console.error('Error desconocido:', error);
-            }
-            return false;
-        }
-    });
-}
-exports.postEjemplarData = postEjemplarData;
 //Funcion para obtener un autor por su nombre y retorna su id
 function getAuthorByName(name, apellido) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -364,10 +343,11 @@ exports.getEditionByName = getEditionByName;
 //Funcion para obtener un libro por su titulo, autor, categoria, editorial, edicion y retorne su id 
 function getBookByData(titulo, autor, categoria, editorial, edicion) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(titulo, autor, categoria, editorial, edicion);
         try {
-            const [rows] = yield pool.query('SELECT id_libro FROM libros_view WHERE titulo = ? and Autor = ? and Categoria = ? and Editorial = ? and Edicion = ?', [titulo, autor, categoria, editorial, edicion]);
+            const [rows] = yield pool.query('SELECT id FROM libros_view WHERE titulo = ? and Autor = ? and Categoria = ? and Editorial = ? and Edicion = ?', [titulo, autor, categoria, editorial, edicion]);
             if (rows.length > 0) {
-                return rows[0].id_libro;
+                return rows[0].id;
             }
             else {
                 return null;
@@ -442,3 +422,78 @@ function getViewEjemplares() {
     });
 }
 exports.getViewEjemplares = getViewEjemplares;
+//Funcion para agregar un ejemplar a la tabla ejemplar
+function postEjemplarData(ejemplar) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const sql = 'INSERT INTO ejemplar SET ?';
+            const result = yield pool.query(sql, ejemplar);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar el ejemplar:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.postEjemplarData = postEjemplarData;
+//Post para agregar un nuevo Pedido que retorna el id del pedido
+function postPedidoData(id_usuario) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0');
+        const day = today.getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        const pedido = {
+            fecha_pedido: formattedDate,
+            id_usuario: id_usuario
+        };
+        try {
+            const sql = 'INSERT INTO pedido SET ?';
+            const result = yield pool.query(sql, pedido);
+            const resultSetHeader = result[0];
+            return resultSetHeader.insertId;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al insertar el pedido:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.postPedidoData = postPedidoData;
+//Funcion para obtener un usuario por su correo y retorne su id
+function getUserByEmail(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_usuario FROM usuario WHERE email_usuario = ?', [email]);
+            if (rows.length > 0) {
+                return rows[0].id_usuario;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener el usuario:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getUserByEmail = getUserByEmail;

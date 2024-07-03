@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData } from '../data-access-layer/data-access-layer';
 import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData,postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName,getEditorialByName, getEditionByName,getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -28,12 +28,21 @@ interface NewBook{
     edicion: number | null;
 }
 
-interface Ejemplar{
+interface EjemplarData {
     id_libro: number;
-    id_pedido: number;
+    id_pedido: number| null;
     id_estado: number;
     descripcion_ejemplar: string;
-    cantidad_ejemplar: number;
+    cantidad_pedido: number;
+}
+
+interface Ejemplar {
+    nombre_libro: string;
+    nombre_autor: string;
+    nombre_categoria: string;
+    nombre_editorial: string;
+    edicion: string;
+    descripcion: string;
 }
 
 interface Usuario {
@@ -261,19 +270,6 @@ export async function postEdicionService(Edicion: any) {
     }
 }
 
-export async function postEjemplarService(Ejemplar: any) {
-    try {
-        const newEjemplar = await postEjemplarData(Ejemplar);
-        return newEjemplar;
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error('Error:', error.message);
-        } else {
-            console.error('Error desconocido:', error);
-        }
-        return false;
-    }
-}
 
 //Funcion para crear un nuevo libro con los datos del libro y los datos de autor, categoria, editorial y edicion
 export async function postNewBook(book: Book) {
@@ -344,20 +340,19 @@ export async function postNewBook(book: Book) {
 }
 
 //Funcion para postear ejemplares de un libro
-export async function postEjemplar(ejemplar: Ejemplar) {
-    const ejemplarCreado: Ejemplar = {
-        id_libro: ejemplar.id_libro,
-        id_pedido: ejemplar.id_pedido,
-        id_estado: ejemplar.id_estado,
-        descripcion_ejemplar: ejemplar.descripcion_ejemplar,
-        cantidad_ejemplar: ejemplar.cantidad_ejemplar
+export async function postEjemplarService(ejemplar: Ejemplar) {
+    const libro = await getBookByData(ejemplar.nombre_libro, ejemplar.nombre_autor, ejemplar.nombre_categoria, ejemplar.nombre_editorial, ejemplar.edicion);
+    const pedido = 1
+    const estado = 5;
+    const ejemplarData: EjemplarData = {
+        id_libro: libro,
+        id_pedido: pedido,
+        id_estado: estado,
+        descripcion_ejemplar: ejemplar.descripcion,
+        cantidad_pedido: 1
     }
-
-
-
-
     try {
-        const newEjemplar = await postEjemplarService(ejemplar);
+        const newEjemplar = await postEjemplarData(ejemplarData);
         return newEjemplar;
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
