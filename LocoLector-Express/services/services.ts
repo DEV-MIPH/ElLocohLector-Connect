@@ -1,6 +1,6 @@
-import { getAllAuthors, getBooksJoin, getAllCategories,getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData } from '../data-access-layer/data-access-layer';
-import {postBookData, postAuthorData,postCategoryData,postEditionData,postEditorialData,postEjemplarData } from '../data-access-layer/data-access-layer';
-import { getAuthorByName,getEditorialByName, getEditionByName,getCategoryByName } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData } from '../data-access-layer/data-access-layer';
+import { postBookData, postAuthorData, postCategoryData, postEditionData, postEditorialData, postEjemplarData } from '../data-access-layer/data-access-layer';
+import { getAuthorByName, getEditorialByName, getEditionByName, getCategoryByName } from '../data-access-layer/data-access-layer';
 
 import Redis from "ioredis";
 import dotenv from 'dotenv';
@@ -20,7 +20,7 @@ interface Book {
     edicion: string;
 }
 
-interface NewBook{
+interface NewBook {
     titulo_libro: string;
     autor: number | null;
     categoria: number | null;
@@ -30,7 +30,7 @@ interface NewBook{
 
 interface EjemplarData {
     id_libro: number;
-    id_pedido: number| null;
+    id_pedido: number | null;
     id_estado: number;
     descripcion_ejemplar: string;
     cantidad_pedido: number;
@@ -89,7 +89,7 @@ export async function getAllBooksService() {
 
 export async function getBooks() {
     try {
-        const redisKey = "libros"; 
+        const redisKey = "libros";
 
         // Intentar obtener los libros de Redis
         const booksFromCache = await redis.get(redisKey);
@@ -129,7 +129,7 @@ export async function getBooksCache() {
         const booksFromDb = await getBooks();
 
         // Guardar los libros en la caché local para la próxima vez
-        cache.set(cacheKey, booksFromDb, tiempoCache);        
+        cache.set(cacheKey, booksFromDb, tiempoCache);
 
         console.log("Libros guardados en la caché local");
 
@@ -210,7 +210,7 @@ export async function postBookService(book: any) {
         }
         return false;
     }
-    
+
 }
 
 export async function postAutorService(Autor: any) {
@@ -239,7 +239,7 @@ export async function postCategoriaService(Categoria: any) {
         }
         return false;
     }
-    
+
 }
 
 export async function postEditorialService(Editorial: any) {
@@ -253,7 +253,7 @@ export async function postEditorialService(Editorial: any) {
             console.error('Error desconocido:', error);
         }
         return false;
-    } 
+    }
 }
 
 export async function postEdicionService(Edicion: any) {
@@ -281,57 +281,57 @@ export async function postNewBook(book: Book) {
         edicion: 0
     }
     const { firstName, lastName } = splitName(book.autor);
-    if(!await searchAutor(firstName, lastName)){
-        await postAutorService({nombre_autor: firstName, apellido_autor: lastName});
-        console.log("Autor nuevo creado "+ book.autor)
-        if(await getAuthorByName(firstName, lastName) != null){
+    if (!await searchAutor(firstName, lastName)) {
+        await postAutorService({ nombre_autor: firstName, apellido_autor: lastName });
+        console.log("Autor nuevo creado " + book.autor)
+        if (await getAuthorByName(firstName, lastName) != null) {
             libroCreado.autor = await getAuthorByName(firstName, lastName);
         }
-    }else{
-        if(await getAuthorByName(firstName, lastName) != null){
+    } else {
+        if (await getAuthorByName(firstName, lastName) != null) {
             libroCreado.autor = await getAuthorByName(firstName, lastName);
         }
     }
 
-    if(!await searchCategoria(book.categoria)){
-        await postCategoriaService({nombre_categoria: book.categoria});
-        console.log("Categoria nueva creada "+ book.categoria)
-        if(await getCategoryByName(book.categoria) != null){
+    if (!await searchCategoria(book.categoria)) {
+        await postCategoriaService({ nombre_categoria: book.categoria });
+        console.log("Categoria nueva creada " + book.categoria)
+        if (await getCategoryByName(book.categoria) != null) {
             libroCreado.categoria = await getCategoryByName(book.categoria);
         }
-    }else{
-        if(await getCategoryByName(book.categoria) != null){
+    } else {
+        if (await getCategoryByName(book.categoria) != null) {
             libroCreado.categoria = await getCategoryByName(book.categoria);
         }
     }
 
-    if(!await searchEditorial(book.editorial)){
-        await postEditorialService({nombre_editorial: book.editorial});
-        console.log("Editorial nueva creada "+ book.editorial)
-        if(await getEditorialByName(book.editorial) != null){
+    if (!await searchEditorial(book.editorial)) {
+        await postEditorialService({ nombre_editorial: book.editorial });
+        console.log("Editorial nueva creada " + book.editorial)
+        if (await getEditorialByName(book.editorial) != null) {
             libroCreado.editorial = await getEditorialByName(book.editorial);
         }
-    }else{
-        if(await getEditorialByName(book.editorial) != null){
+    } else {
+        if (await getEditorialByName(book.editorial) != null) {
             libroCreado.editorial = await getEditorialByName(book.editorial);
         }
     }
 
-    if(!await searchEdicion(book.edicion)){
-        await postEdicionService({edicion: book.edicion});
-        console.log("Edicion nueva creada "+ book.edicion)
-        if(await getEditionByName(book.edicion) != null){
+    if (!await searchEdicion(book.edicion)) {
+        await postEdicionService({ edicion: book.edicion });
+        console.log("Edicion nueva creada " + book.edicion)
+        if (await getEditionByName(book.edicion) != null) {
             libroCreado.edicion = await getEditionByName(book.edicion);
         }
-    }else{
-        if(await getEditionByName(book.edicion) != null){
+    } else {
+        if (await getEditionByName(book.edicion) != null) {
             libroCreado.edicion = await getEditionByName(book.edicion);
         }
     }
 
     try {
         const newBook = await postBookService(libroCreado);
-        console.log("Libro nuevo creado "+ libroCreado.titulo_libro)
+        console.log("Libro nuevo creado " + libroCreado.titulo_libro)
         return newBook;
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -363,9 +363,9 @@ export async function postEjemplarService(ejemplar: Ejemplar) {
 //Funciones para buscar si existe un autor, categoria, editorial o edicion
 async function searchAutor(autor: string, apellido: string) {
     try {
-        const autorBuscado = await getAuthorByName(autor,apellido);
-        if(autorBuscado){
-           return true;
+        const autorBuscado = await getAuthorByName(autor, apellido);
+        if (autorBuscado) {
+            return true;
         }
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -376,8 +376,8 @@ async function searchAutor(autor: string, apellido: string) {
 export async function searchCategoria(categoria: string) {
     try {
         const categoriaBuscada = await getCategoryByName(categoria);
-        if(categoriaBuscada){
-           return true;
+        if (categoriaBuscada) {
+            return true;
         }
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -388,8 +388,8 @@ export async function searchCategoria(categoria: string) {
 export async function searchEditorial(editorial: string) {
     try {
         const editorialBuscada = await getEditorialByName(editorial);
-        if(editorialBuscada){
-           return true;
+        if (editorialBuscada) {
+            return true;
         }
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -400,8 +400,8 @@ export async function searchEditorial(editorial: string) {
 export async function searchEdicion(edicion: string) {
     try {
         const edicionBuscada = await getEditionByName(edicion);
-        if(edicionBuscada){
-           return true;
+        if (edicionBuscada) {
+            return true;
         }
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
