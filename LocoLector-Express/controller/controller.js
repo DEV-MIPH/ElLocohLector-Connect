@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
+exports.getUserIdByEmailController = exports.postPedidoController = exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
 const services_3 = require("../services/services");
@@ -266,8 +266,36 @@ function getAllNombreUsuariosController(req, res) {
         }
         catch (error) {
             console.error('Error en el controlador de libros:', error);
-            res.status(500).json({ message: 'Error al obtener los libros' });
+            res.status(500).json({ message: 'Error al obtener los nombres de usuario' });
         }
     });
 }
 exports.getAllNombreUsuariosController = getAllNombreUsuariosController;
+function postPedidoController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log(req.body);
+            const pedido = yield (0, services_1.postPedidoDataService)(req.body);
+            res.status(201).json(pedido);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al postear un pedido' });
+        }
+    });
+}
+exports.postPedidoController = postPedidoController;
+function getUserIdByEmailController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log(req.body);
+            const user = yield (0, services_1.getUserIdByEmailService)(req.body);
+            res.status(200).json(user);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getUserIdByEmailController = getUserIdByEmailController;

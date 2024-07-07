@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData, getUserByEmail, getUserIdByEmail, postPedidoData } from '../data-access-layer/data-access-layer';
 import { postBookData, postAuthorData, postCategoryData, postEditionData, postEditorialData, postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName, getEditorialByName, getEditionByName, getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -53,8 +53,10 @@ interface Usuario {
     id_tipo_usuario: number;
 }
 
+interface PedidoData{
+    email_usuario: string;
+}
 
-//Cache de libros
 
 
 export async function getBooksService() {
@@ -91,18 +93,15 @@ export async function getBooks() {
     try {
         const redisKey = "libros";
 
-        // Intentar obtener los libros de Redis
         const booksFromCache = await redis.get(redisKey);
         if (booksFromCache) {
             console.log("Libros obtenidos de la caché Redis");
             return JSON.parse(booksFromCache);
         }
 
-        // Si no hay libros en la caché, obtenerlos de la base de datos
         const booksFromDb = await getBooksService();
         console.log("Libros obtenidos de la base de datos");
 
-        // Guardar los libros en la caché Redis para la próxima vez
         await redis.set(redisKey, JSON.stringify(booksFromDb));
         console.log("Libros guardados en la caché Redis");
 
@@ -112,23 +111,21 @@ export async function getBooks() {
         return [];
     }
 }
-//Funcion que obtiene los datos del cache y si no los tiene los obtiene de la base de datos y los guarda en el cache
+
 export async function getBooksCache() {
     try {
         const cacheKey = "libros";
         const tiempoCache = 3600;
 
-        // Intentar obtener los libros de la caché
+
         const booksFromCache = cache.get(cacheKey);
         if (booksFromCache) {
             console.log("Libros obtenidos de la caché local");
             return booksFromCache;
         }
 
-        // Si no hay libros en la caché, obtenerlos de la base de datos
         const booksFromDb = await getBooks();
 
-        // Guardar los libros en la caché local para la próxima vez
         cache.set(cacheKey, booksFromDb, tiempoCache);
 
         console.log("Libros guardados en la caché local");
@@ -199,7 +196,7 @@ export async function getEdicionesService() {
 export async function postBookService(book: any) {
     try {
         const newBook = await postBookData(book);
-        //limpiar cache
+
         cache.flushAll();
         return newBook;
     } catch (error) {
@@ -271,7 +268,7 @@ export async function postEdicionService(Edicion: any) {
 }
 
 
-//Funcion para crear un nuevo libro con los datos del libro y los datos de autor, categoria, editorial y edicion
+
 export async function postNewBook(book: Book) {
     const libroCreado: NewBook = {
         titulo_libro: book.titulo_libro,
@@ -339,7 +336,7 @@ export async function postNewBook(book: Book) {
     }
 }
 
-//Funcion para postear ejemplares de un libro
+
 export async function postEjemplarService(ejemplar: Ejemplar) {
     const libro = await getBookByData(ejemplar.nombre_libro, ejemplar.nombre_autor, ejemplar.nombre_categoria, ejemplar.nombre_editorial, ejemplar.edicion);
     const pedido = 1
@@ -359,8 +356,6 @@ export async function postEjemplarService(ejemplar: Ejemplar) {
         return false;
     }
 }
-
-//Funciones para buscar si existe un autor, categoria, editorial o edicion
 async function searchAutor(autor: string, apellido: string) {
     try {
         const autorBuscado = await getAuthorByName(autor, apellido);
@@ -409,7 +404,6 @@ export async function searchEdicion(edicion: string) {
     }
 }
 
-//funcion para agregar un usuario a la base de datos
 export async function postUser(user: Usuario) {
     try {
         const newUser = await postUserData(user);
@@ -471,8 +465,43 @@ export async function getAllNombreUsuariosService() {
     }
 }
 
+export async function postPedidoService(usuario: any) {
+    try {
+        console.log(usuario)
+        const newPedido = await postPedidoData(usuario);
+        return newPedido;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
 
-//Funcion para separar el nombre del autor en nombre y apellido
+}
+
+export async function getUserIdByEmailService(email: any) {
+    try {
+        console.log("user service "+email)
+        const user = await getUserIdByEmail(email);
+        return user;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return null;
+    }
+}
+
+export async function postPedidoDataService(email: any) {
+    try {
+        console.log(email.email_usuario)
+
+        const idUser = await getUserIdByEmailService(email.email_usuario)
+        console.log(idUser)
+        const newPedido = await postPedidoData(idUser.id_usuario);
+        return newPedido;
+    } catch (error) {
+        console.error('Error en el service de postPedidoDataService:', error);
+        return false;
+    }
+}
+
 function splitName(fullName: string) {
     const nameParts = fullName.trim().split(' ');
     const firstName = nameParts[0];

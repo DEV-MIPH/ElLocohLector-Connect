@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllAdminService, getAllEstadosService, getAllNombreUsuariosService, getBooksCache, getEjemplaresbyIdPedido, getViewEjemplaresService, postEjemplarService, postNewBook } from '../services/services';
+import { getAllAdminService, getAllEstadosService, getAllNombreUsuariosService, getBooksCache, getEjemplaresbyIdPedido, getUserIdByEmailService, getViewEjemplaresService, postEjemplarService, postNewBook, postPedidoDataService, postPedidoService } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
@@ -32,7 +32,7 @@ export async function getAllBooksController(req: Request, res: Response) {
         res.status(500).json({ message: 'Error al obtener los libros' });
     }
 
-    
+
 }
 
 export async function getAllAutoresController(req: Request, res: Response) {
@@ -42,7 +42,7 @@ export async function getAllAutoresController(req: Request, res: Response) {
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al obtener los libros' });
-    }   
+    }
 }
 
 export async function getAllCategoriasController(req: Request, res: Response) {
@@ -83,7 +83,7 @@ export async function postBookController(req: Request, res: Response) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al postear un libro' });
     }
-    
+
 }
 
 export async function postAutorController(req: Request, res: Response) {
@@ -108,7 +108,7 @@ export async function postCategoriaController(req: Request, res: Response) {
 
 export async function postEditorialController(req: Request, res: Response) {
     try {
-        console.log("Editorial nueva" )
+        console.log("Editorial nueva")
         console.log(req.body);
         const editorial = await postEditorialService(req.body);
         res.status(201).json(editorial);
@@ -116,7 +116,7 @@ export async function postEditorialController(req: Request, res: Response) {
         console.error('Error en el controlador de libros:', error);
         res.status(500).json({ message: 'Error al postear un libro' });
     }
-   
+
 }
 
 export async function postEdicionController(req: Request, res: Response) {
@@ -210,12 +210,28 @@ export async function getAllNombreUsuariosController(req: Request, res: Response
         res.status(200).json(books);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
-        res.status(500).json({ message: 'Error al obtener los libros' });
+        res.status(500).json({ message: 'Error al obtener los nombres de usuario' });
     }
 }
 
+export async function postPedidoController(req: Request, res: Response): Promise<void> {
+    try {
+        console.log(req.body)
+        const pedido = await postPedidoDataService(req.body);
+        res.status(201).json(pedido);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al postear un pedido' });
+    }
+}
 
-
-
-
-
+export async function getUserIdByEmailController(req: Request, res: Response): Promise<void> {
+    try {
+        console.log(req.body)
+        const user = await getUserIdByEmailService(req.body);
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al obtener los libros' });
+    }
+}

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllNombreUsuariosService = exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.postPedidoDataService = exports.getUserIdByEmailService = exports.postPedidoService = exports.getAllNombreUsuariosService = exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -22,7 +22,6 @@ dotenv_1.default.config();
 const redis = new ioredis_1.default(`rediss://default:${process.env.REDIS_TOKEN}@engaging-termite-30271.upstash.io:30271`);
 const NodeCache = require('node-cache');
 const cache = new NodeCache();
-//Cache de libros
 function getBooksService() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -63,16 +62,13 @@ function getBooks() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const redisKey = "libros";
-            // Intentar obtener los libros de Redis
             const booksFromCache = yield redis.get(redisKey);
             if (booksFromCache) {
                 console.log("Libros obtenidos de la caché Redis");
                 return JSON.parse(booksFromCache);
             }
-            // Si no hay libros en la caché, obtenerlos de la base de datos
             const booksFromDb = yield getBooksService();
             console.log("Libros obtenidos de la base de datos");
-            // Guardar los libros en la caché Redis para la próxima vez
             yield redis.set(redisKey, JSON.stringify(booksFromDb));
             console.log("Libros guardados en la caché Redis");
             return booksFromDb;
@@ -84,21 +80,17 @@ function getBooks() {
     });
 }
 exports.getBooks = getBooks;
-//Funcion que obtiene los datos del cache y si no los tiene los obtiene de la base de datos y los guarda en el cache
 function getBooksCache() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const cacheKey = "libros";
             const tiempoCache = 3600;
-            // Intentar obtener los libros de la caché
             const booksFromCache = cache.get(cacheKey);
             if (booksFromCache) {
                 console.log("Libros obtenidos de la caché local");
                 return booksFromCache;
             }
-            // Si no hay libros en la caché, obtenerlos de la base de datos
             const booksFromDb = yield getBooks();
-            // Guardar los libros en la caché local para la próxima vez
             cache.set(cacheKey, booksFromDb, tiempoCache);
             console.log("Libros guardados en la caché local");
             return booksFromDb;
@@ -186,7 +178,6 @@ function postBookService(book) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const newBook = yield (0, data_access_layer_2.postBookData)(book);
-            //limpiar cache
             cache.flushAll();
             return newBook;
         }
@@ -274,7 +265,6 @@ function postEdicionService(Edicion) {
     });
 }
 exports.postEdicionService = postEdicionService;
-//Funcion para crear un nuevo libro con los datos del libro y los datos de autor, categoria, editorial y edicion
 function postNewBook(book) {
     return __awaiter(this, void 0, void 0, function* () {
         const libroCreado = {
@@ -345,7 +335,6 @@ function postNewBook(book) {
     });
 }
 exports.postNewBook = postNewBook;
-//Funcion para postear ejemplares de un libro
 function postEjemplarService(ejemplar) {
     return __awaiter(this, void 0, void 0, function* () {
         const libro = yield (0, data_access_layer_1.getBookByData)(ejemplar.nombre_libro, ejemplar.nombre_autor, ejemplar.nombre_categoria, ejemplar.nombre_editorial, ejemplar.edicion);
@@ -369,7 +358,6 @@ function postEjemplarService(ejemplar) {
     });
 }
 exports.postEjemplarService = postEjemplarService;
-//Funciones para buscar si existe un autor, categoria, editorial o edicion
 function searchAutor(autor, apellido) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -429,7 +417,6 @@ function searchEdicion(edicion) {
     });
 }
 exports.searchEdicion = searchEdicion;
-//funcion para agregar un usuario a la base de datos
 function postUser(user) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -508,7 +495,50 @@ function getAllNombreUsuariosService() {
     });
 }
 exports.getAllNombreUsuariosService = getAllNombreUsuariosService;
-//Funcion para separar el nombre del autor en nombre y apellido
+function postPedidoService(usuario) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log(usuario);
+            const newPedido = yield (0, data_access_layer_1.postPedidoData)(usuario);
+            return newPedido;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.postPedidoService = postPedidoService;
+function getUserIdByEmailService(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log("user service " + email);
+            const user = yield (0, data_access_layer_1.getUserIdByEmail)(email);
+            return user;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return null;
+        }
+    });
+}
+exports.getUserIdByEmailService = getUserIdByEmailService;
+function postPedidoDataService(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log(email.email_usuario);
+            const idUser = yield getUserIdByEmailService(email.email_usuario);
+            console.log(idUser);
+            const newPedido = yield (0, data_access_layer_1.postPedidoData)(idUser.id_usuario);
+            return newPedido;
+        }
+        catch (error) {
+            console.error('Error en el service de postPedidoDataService:', error);
+            return false;
+        }
+    });
+}
+exports.postPedidoDataService = postPedidoDataService;
 function splitName(fullName) {
     const nameParts = fullName.trim().split(' ');
     const firstName = nameParts[0];

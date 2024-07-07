@@ -12,10 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.getUserIdByEmail = exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
-// Cargar las variables de entorno desde un archivo .env
 dotenv_1.default.config();
 const pool = (0, promise_1.createPool)({
     host: process.env.DATABASE_URL,
@@ -25,7 +24,6 @@ const pool = (0, promise_1.createPool)({
     connectionLimit: 10,
     queueLimit: 0
 });
-// Función para obtener todos los libros de la base de datos
 function getAllBooks() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -44,7 +42,6 @@ function getAllBooks() {
     });
 }
 exports.getAllBooks = getAllBooks;
-//Funcion para hacer un join entre las tablas libro , autor , editorial , categoria , edicion
 function getBooksJoin() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -63,7 +60,6 @@ function getBooksJoin() {
     });
 }
 exports.getBooksJoin = getBooksJoin;
-//Funcion para obtener todos los autores de la base de datos
 function getAllAuthors() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -82,7 +78,6 @@ function getAllAuthors() {
     });
 }
 exports.getAllAuthors = getAllAuthors;
-//Funcion para obtener todas las categorias de la base de datos
 function getAllCategories() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -101,7 +96,6 @@ function getAllCategories() {
     });
 }
 exports.getAllCategories = getAllCategories;
-//Funcion para obtener todas las editoriales de la base de datos
 function getAllEditorials() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -120,7 +114,6 @@ function getAllEditorials() {
     });
 }
 exports.getAllEditorials = getAllEditorials;
-//Funcion para obtener todas las ediciones de la base de datos
 function getAllEditions() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -139,7 +132,6 @@ function getAllEditions() {
     });
 }
 exports.getAllEditions = getAllEditions;
-//Funcion para postear un libro en la base de datos
 function postBookData(book) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -160,7 +152,6 @@ function postBookData(book) {
     });
 }
 exports.postBookData = postBookData;
-//Funcion para postear un autor en la base de datos
 function postAuthorData(author) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -181,7 +172,6 @@ function postAuthorData(author) {
     });
 }
 exports.postAuthorData = postAuthorData;
-//Funcion para postear una categoria en la base de datos
 function postCategoryData(category) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -202,7 +192,6 @@ function postCategoryData(category) {
     });
 }
 exports.postCategoryData = postCategoryData;
-//Funcion para postear una editorial en la base de datos
 function postEditorialData(editorial) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -223,7 +212,6 @@ function postEditorialData(editorial) {
     });
 }
 exports.postEditorialData = postEditorialData;
-//Funcion para postear una edicion en la base de datos
 function postEditionData(edition) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -244,7 +232,6 @@ function postEditionData(edition) {
     });
 }
 exports.postEditionData = postEditionData;
-//Funcion para obtener un autor por su nombre y retorna su id
 function getAuthorByName(name, apellido) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -268,7 +255,6 @@ function getAuthorByName(name, apellido) {
     });
 }
 exports.getAuthorByName = getAuthorByName;
-//Funcion para obtener un editorial por su nombre
 function getEditorialByName(name) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -292,7 +278,6 @@ function getEditorialByName(name) {
     });
 }
 exports.getEditorialByName = getEditorialByName;
-//Funcion para obtener una categoria por su nombre
 function getCategoryByName(name) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -316,7 +301,6 @@ function getCategoryByName(name) {
     });
 }
 exports.getCategoryByName = getCategoryByName;
-//Funcion para obtener una edicion por su nombre y retorne su id
 function getEditionByName(name) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -340,7 +324,6 @@ function getEditionByName(name) {
     });
 }
 exports.getEditionByName = getEditionByName;
-//Funcion para obtener un libro por su titulo, autor, categoria, editorial, edicion y retorne su id 
 function getBookByData(titulo, autor, categoria, editorial, edicion) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(titulo, autor, categoria, editorial, edicion);
@@ -365,7 +348,6 @@ function getBookByData(titulo, autor, categoria, editorial, edicion) {
     });
 }
 exports.getBookByData = getBookByData;
-//Funcion para agregar un usuario a la base de datos
 function postUserData(user) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -422,7 +404,6 @@ function getViewEjemplares() {
     });
 }
 exports.getViewEjemplares = getViewEjemplares;
-//Funcion para agregar un ejemplar a la tabla ejemplar
 function postEjemplarData(ejemplar) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -443,7 +424,6 @@ function postEjemplarData(ejemplar) {
     });
 }
 exports.postEjemplarData = postEjemplarData;
-//Post para agregar un nuevo Pedido que retorna el id del pedido
 function postPedidoData(id_usuario) {
     return __awaiter(this, void 0, void 0, function* () {
         const today = new Date();
@@ -473,7 +453,6 @@ function postPedidoData(id_usuario) {
     });
 }
 exports.postPedidoData = postPedidoData;
-//Funcion para obtener un usuario por su correo y retorne su id
 function getUserByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -518,7 +497,7 @@ exports.getEjemplaresByIdPedido = getEjemplaresByIdPedido;
 function getAllNombreUsuariosData() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const [rows] = yield pool.query('SELECT nombre_usuario from usuario where id_tipo_usuario = 2;');
+            const [rows] = yield pool.query('SELECT * FROM usuario where id_tipo_usuario = 2 or id_usuario = 1 ;');
             return rows;
         }
         catch (error) {
@@ -551,3 +530,26 @@ function getAllEstados() {
     });
 }
 exports.getAllEstados = getAllEstados;
+function getUserIdByEmail(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_usuario FROM usuario WHERE email_usuario = ?;', [email]);
+            if (rows.length > 0) {
+                return rows[0];
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener el id del usuario:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getUserIdByEmail = getUserIdByEmail;

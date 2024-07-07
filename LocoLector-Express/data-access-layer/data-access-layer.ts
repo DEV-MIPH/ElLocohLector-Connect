@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { createPool, Pool } from 'mysql2/promise';
 import { ResultSetHeader } from 'mysql2/promise';
 
-// Cargar las variables de entorno desde un archivo .env
+
 dotenv.config();
 
 interface Book {
@@ -72,9 +72,6 @@ const pool: Pool = createPool({
     queueLimit: 0
   });
 
-
-
-// Función para obtener todos los libros de la base de datos
 export async function getAllBooks() {
     try {
         const [rows] = await pool.query('SELECT * FROM libro;');
@@ -89,7 +86,6 @@ export async function getAllBooks() {
     }
 }
 
-//Funcion para hacer un join entre las tablas libro , autor , editorial , categoria , edicion
 export async function getBooksJoin() {
     try {
         const [rows] = await pool.query('SELECT * FROM libros_view;');
@@ -104,7 +100,6 @@ export async function getBooksJoin() {
     } 
 }
 
-//Funcion para obtener todos los autores de la base de datos
 export async function getAllAuthors() {
     try {
         const [rows] = await pool.query('SELECT * FROM autor;');
@@ -119,7 +114,6 @@ export async function getAllAuthors() {
     }
 }
 
-//Funcion para obtener todas las categorias de la base de datos
 export async function getAllCategories() {
     try {
         const [rows] = await pool.query('SELECT * FROM categoria;');
@@ -134,7 +128,6 @@ export async function getAllCategories() {
     }
 }
 
-//Funcion para obtener todas las editoriales de la base de datos
 export async function getAllEditorials() {
     try {
         const [rows] = await pool.query('SELECT * FROM editorial;');
@@ -149,7 +142,6 @@ export async function getAllEditorials() {
     }
 }
 
-//Funcion para obtener todas las ediciones de la base de datos
 export async function getAllEditions() {
     try {
         const [rows] = await pool.query('SELECT * FROM edicion;');
@@ -164,7 +156,6 @@ export async function getAllEditions() {
     }
 }
 
-//Funcion para postear un libro en la base de datos
 export async function postBookData(book: Book): Promise<boolean> {
     try {
         const sql = 'INSERT INTO libro SET ?'; 
@@ -181,7 +172,6 @@ export async function postBookData(book: Book): Promise<boolean> {
     }
 }
 
-//Funcion para postear un autor en la base de datos
 export async function postAuthorData(author: Author): Promise<boolean> {
     try {
         const sql = 'INSERT INTO autor SET ?'; 
@@ -198,8 +188,6 @@ export async function postAuthorData(author: Author): Promise<boolean> {
     }
 }
 
-
-//Funcion para postear una categoria en la base de datos
 export async function postCategoryData(category: Category): Promise<boolean> {
     try {
         const sql = 'INSERT INTO categoria SET ?'; 
@@ -217,8 +205,6 @@ export async function postCategoryData(category: Category): Promise<boolean> {
 }
 
 
-
-//Funcion para postear una editorial en la base de datos
 export async function postEditorialData(editorial: Editorial): Promise<boolean> {
     try {
         const sql = 'INSERT INTO editorial SET ?'; 
@@ -235,7 +221,6 @@ export async function postEditorialData(editorial: Editorial): Promise<boolean> 
     }
 }
 
-//Funcion para postear una edicion en la base de datos
 export async function postEditionData(edition: Edition): Promise<boolean> {
     try {
         const sql = 'INSERT INTO edicion SET ?'; 
@@ -252,11 +237,6 @@ export async function postEditionData(edition: Edition): Promise<boolean> {
     }
 }
 
-
-
-
-
-//Funcion para obtener un autor por su nombre y retorna su id
 export async function getAuthorByName(name: string, apellido:string): Promise<number | null> {
     try {
         const [rows]: any[] = await pool.query('SELECT id_autor FROM autor WHERE nombre_autor = ? and apellido_autor = ?', [name,apellido]);
@@ -275,8 +255,6 @@ export async function getAuthorByName(name: string, apellido:string): Promise<nu
     }
 }
 
-
-//Funcion para obtener un editorial por su nombre
 export async function getEditorialByName(name: string) {
     try{
         const [rows]: any[] = await pool.query('SELECT id_editorial FROM editorial WHERE nombre_editorial = ?', [name]);
@@ -296,7 +274,6 @@ export async function getEditorialByName(name: string) {
     }
 }
 
-//Funcion para obtener una categoria por su nombre
 export async function getCategoryByName(name: string) {
     try{
         const [rows]: any[] = await pool.query('SELECT id_categoria FROM categoria WHERE nombre_categoria = ?', [name]);
@@ -317,7 +294,6 @@ export async function getCategoryByName(name: string) {
     
 }
 
-//Funcion para obtener una edicion por su nombre y retorne su id
 export async function getEditionByName(name: string) {
     try{
         const [rows]: any[] = await pool.query('SELECT id_edicion FROM edicion WHERE edicion = ?', [name]);
@@ -337,7 +313,6 @@ export async function getEditionByName(name: string) {
     }
 }
 
-//Funcion para obtener un libro por su titulo, autor, categoria, editorial, edicion y retorne su id 
 export async function getBookByData(titulo: string, autor: string, categoria: string, editorial: string, edicion: string) {
     console.log(titulo,autor,categoria,editorial,edicion);
     try{
@@ -358,7 +333,6 @@ export async function getBookByData(titulo: string, autor: string, categoria: st
     }
 }
 
-//Funcion para agregar un usuario a la base de datos
 export async function postUserData(user: Usuario): Promise<boolean> {
     try {
         const sql = 'INSERT INTO usuario SET ?'; 
@@ -403,7 +377,6 @@ export async function getViewEjemplares(){
     }
 }
 
-//Funcion para agregar un ejemplar a la tabla ejemplar
 export async function postEjemplarData(ejemplar: EjemplarData): Promise<boolean> {
     try {
         const sql = 'INSERT INTO ejemplar SET ?'; 
@@ -420,7 +393,6 @@ export async function postEjemplarData(ejemplar: EjemplarData): Promise<boolean>
     }
 }
 
-//Post para agregar un nuevo Pedido que retorna el id del pedido
 export async function postPedidoData(id_usuario: number): Promise<number | null> {
     const today: Date = new Date();
     const year: number = today.getFullYear();
@@ -447,7 +419,6 @@ export async function postPedidoData(id_usuario: number): Promise<number | null>
     }
 }
 
-//Funcion para obtener un usuario por su correo y retorne su id
 export async function getUserByEmail(email: string) {
     try{
         const [rows]: any[] = await pool.query('SELECT id_usuario FROM usuario WHERE email_usuario = ?', [email]);
@@ -483,7 +454,7 @@ export async function getEjemplaresByIdPedido(id: any) {
 
 export async function getAllNombreUsuariosData() {
     try {
-        const [rows] = await pool.query('SELECT nombre_usuario from usuario where id_tipo_usuario = 2;');
+        const [rows] = await pool.query('SELECT * FROM usuario where id_tipo_usuario = 2 or id_usuario = 1 ;');
         return rows;
     } catch (error) {
         if (error instanceof Error) {
@@ -508,4 +479,24 @@ export async function getAllEstados() {
         return [];
     }
 }
+
+export async function getUserIdByEmail(email: any) {
+    try {
+        const [rows]: any[] = await pool.query('SELECT id_usuario FROM usuario WHERE email_usuario = ?;', [email]);
+        if (rows.length > 0) {
+            return rows[0]
+        } else {
+            return null;
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener el id del usuario:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+
+    
 
