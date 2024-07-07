@@ -510,7 +510,7 @@ export async function getIdEstadoByNombreEstado(estado: any) {
     try {
         const [rows]: any[] = await pool.query('SELECT id_estado FROM estado WHERE nombre_estado = ?;', [estado]);
         if (rows.length > 0) {
-            return rows[0]
+            return rows[0].id_estado;
         } else {
             return null;
         }
@@ -523,13 +523,27 @@ export async function getIdEstadoByNombreEstado(estado: any) {
         return null;
     }
 }
+
 export async function modificarEjemplar(ejemplar: EjemplarView) {
     let id_estado = await getIdEstadoByNombreEstado(ejemplar.estado);
+    console.log(id_estado);
+    console.log(ejemplar);
+    if (id_estado === null) {
+        console.error('Error: el estado especificado no existe');
+        return false;
+    }
+
     try {
         const sql = 'UPDATE ejemplar SET id_estado = ?, id_pedido = ? WHERE id_ejemplar = ?';
-        const result = await pool.query(sql, [id_estado, ejemplar.id_pedido, ejemplar.id_ejemplar]);
-        const resultSetHeader = result[0] as ResultSetHeader;
-        return resultSetHeader.affectedRows > 0;
+        const [result]: any[] = await pool.query(sql, [id_estado, ejemplar.id_pedido, ejemplar.id_ejemplar]);
+
+        // Asegúrate de que `result` no sea undefined
+        if (result && result.affectedRows !== undefined) {
+            return result.affectedRows > 0;
+        } else {
+            console.error('Error: El resultado de la consulta no tiene la estructura esperada');
+            return false;
+        }
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al modificar el ejemplar:', error.message);
@@ -538,9 +552,8 @@ export async function modificarEjemplar(ejemplar: EjemplarView) {
         }
         return false;
     }
-   
-    
 }
+
 
     
 
