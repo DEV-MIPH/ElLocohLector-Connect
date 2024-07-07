@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getViewEjemplaresController, postAutorController, postBookController, 
+import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getAllEstadosController, getEjemplaresByIdPedidoController, getViewEjemplaresController, postAutorController, postBookController, 
     postCategoriaController, postEdicionController, postEditorialController, 
     postEjemplarController,
     postNewUser} from './controller/controller';
@@ -49,6 +49,8 @@ app.get('/getadmins', getAllAdminController);
 
 app.get('/ejemplares', getViewEjemplaresController);
 
+app.get('/estados', getAllEstadosController);
+
 app.post('/libros', postBookController);
 
 app.post('/autores', postAutorController);
@@ -66,6 +68,8 @@ app.post('/send-email', sendEmail);
 app.post('/addUser', postNewUser);
 
 app.post('/ejemplar', postEjemplarController);
+
+app.post('/ejemplaresByPedido', getEjemplaresByIdPedidoController);
 
 
 app.get('/', (req, res) => {

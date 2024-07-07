@@ -467,9 +467,31 @@ export async function getUserByEmail(email: string) {
     }
 }
 
+export async function getEjemplaresByIdPedido(id: any) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM ejemplares_view WHERE id_pedido = ?;', [id]);
+        return rows;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener los ejemplares:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
 
-
-    
-
-
+export async function getAllEstados() {
+    try {
+        const [rows] = await pool.query('SELECT nombre_estado FROM estado;');
+        return rows;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener los estados:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
 

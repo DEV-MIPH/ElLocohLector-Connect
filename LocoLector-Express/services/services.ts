@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData, getEjemplaresByIdPedido, getAllEstados } from '../data-access-layer/data-access-layer';
 import { postBookData, postAuthorData, postCategoryData, postEditionData, postEditorialData, postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName, getEditorialByName, getEditionByName, getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -434,6 +434,27 @@ export async function getViewEjemplaresService() {
     try {
         const books = await getViewEjemplares();
         return books;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return [];
+    }
+}
+
+export async function getEjemplaresbyIdPedido(pedido: any) {
+    try {
+        const ejemplares = await getEjemplaresByIdPedido(pedido);
+        return ejemplares;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return [];
+    }
+
+}
+
+export async function getAllEstadosService() {
+    try {
+        const ejemplares = await getAllEstados();
+        return ejemplares;
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         return [];

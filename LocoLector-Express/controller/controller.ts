@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllAdminService, getBooksCache, getViewEjemplaresService, postEjemplarService, postNewBook } from '../services/services';
+import { getAllAdminService, getAllEstadosService, getBooksCache, getEjemplaresbyIdPedido, getViewEjemplaresService, postEjemplarService, postNewBook } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
@@ -181,6 +181,27 @@ export async function postNewEjemplar(req: Request, res: Response): Promise<void
         res.status(500).json({ message: 'Error al postear un libro' });
     }
 
+}
+
+export async function getEjemplaresByIdPedidoController(req: Request, res: Response): Promise<void> {
+    try {
+        console.log(req.body.id_pedido)
+        const book = await getEjemplaresbyIdPedido(req.params.id_pedido);
+        res.status(200).json(book);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al obtener los libros' });
+    }
+}
+
+export async function getAllEstadosController(req: Request, res: Response): Promise<void> {
+    try {
+        const books = await getAllEstadosService();
+        res.status(200).json(books);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al obtener los libros' });
+    }
 }
 
 

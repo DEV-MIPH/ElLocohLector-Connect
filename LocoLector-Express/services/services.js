@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -469,6 +469,32 @@ function getViewEjemplaresService() {
     });
 }
 exports.getViewEjemplaresService = getViewEjemplaresService;
+function getEjemplaresbyIdPedido(pedido) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const ejemplares = yield (0, data_access_layer_1.getEjemplaresByIdPedido)(pedido);
+            return ejemplares;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return [];
+        }
+    });
+}
+exports.getEjemplaresbyIdPedido = getEjemplaresbyIdPedido;
+function getAllEstadosService() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const ejemplares = yield (0, data_access_layer_1.getAllEstados)();
+            return ejemplares;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return [];
+        }
+    });
+}
+exports.getAllEstadosService = getAllEstadosService;
 //Funcion para separar el nombre del autor en nombre y apellido
 function splitName(fullName) {
     const nameParts = fullName.trim().split(' ');
