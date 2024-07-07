@@ -19,17 +19,17 @@ const port = 3000;
 
 app.use(express.json());
 
-// app.use(cors({
-//     origin: (origin, callback) => {
-//             if (origin && origin.includes('localhost')) {
-//                 callback(null, true);
-//             } else {
-//                 callback(new Error('No permitido'));
-//             }
-//         }
-//     }
-//     )
-// );
+app.use(cors({
+    origin: (origin, callback) => {
+            if (origin && origin.includes('localhost')) {
+                callback(null, true);
+            } else {
+                callback(new Error('No permitido'));
+            }
+        }
+    }
+    )
+);
 
 app.get('/libros', getAllBooksCacheController);
 
