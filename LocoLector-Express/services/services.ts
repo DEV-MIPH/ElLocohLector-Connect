@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData, getUserByEmail, getUserIdByEmail, postPedidoData } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData, getUserByEmail, getUserIdByEmail, postPedidoData, modificarEjemplar } from '../data-access-layer/data-access-layer';
 import { postBookData, postAuthorData, postCategoryData, postEditionData, postEditorialData, postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName, getEditorialByName, getEditionByName, getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -500,6 +500,17 @@ export async function postPedidoDataService(email: any) {
         console.error('Error en el service de postPedidoDataService:', error);
         return false;
     }
+}
+
+export async function modificarEjemplarService(ejemplar: any) {
+    try {
+        const ejemplaresModificados = await modificarEjemplar(ejemplar);
+        return ejemplaresModificados;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
+
 }
 
 function splitName(fullName: string) {

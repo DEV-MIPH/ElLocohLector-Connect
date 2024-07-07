@@ -48,6 +48,14 @@ interface Ejemplar {
     descripcion: string;
 }
 
+interface EjemplarView {
+    id_ejemplar: number;
+    estado: string;
+    id_pedido: number;
+}
+
+
+
 
 
 interface Usuario {
@@ -496,6 +504,42 @@ export async function getUserIdByEmail(email: any) {
         }
         return null;
     }
+}
+
+export async function getIdEstadoByNombreEstado(estado: any) {
+    try {
+        const [rows]: any[] = await pool.query('SELECT id_estado FROM estado WHERE nombre_estado = ?;', [estado]);
+        if (rows.length > 0) {
+            return rows[0]
+        } else {
+            return null;
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener el id del estado:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return null;
+    }
+}
+export async function modificarEjemplar(ejemplar: EjemplarView) {
+    let id_estado = await getIdEstadoByNombreEstado(ejemplar.estado);
+    try {
+        const sql = 'UPDATE ejemplar SET id_estado = ?, id_pedido = ? WHERE id_ejemplar = ?';
+        const result = await pool.query(sql, [id_estado, ejemplar.id_pedido, ejemplar.id_ejemplar]);
+        const resultSetHeader = result[0] as ResultSetHeader;
+        return resultSetHeader.affectedRows > 0;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al modificar el ejemplar:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return false;
+    }
+   
+    
 }
 
     

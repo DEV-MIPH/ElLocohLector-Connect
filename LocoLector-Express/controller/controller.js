@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserIdByEmailController = exports.postPedidoController = exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
+exports.modificarEjemplarController = exports.getUserIdByEmailController = exports.postPedidoController = exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
 const services_3 = require("../services/services");
@@ -294,8 +294,22 @@ function getUserIdByEmailController(req, res) {
         }
         catch (error) {
             console.error('Error en el controlador de libros:', error);
-            res.status(500).json({ message: 'Error al obtener los libros' });
+            res.status(500).json({ message: 'Error al getUserIdByEmailController' });
         }
     });
 }
 exports.getUserIdByEmailController = getUserIdByEmailController;
+function modificarEjemplarController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log("modificarEjemplarController " + req.body);
+            const ejemplar = yield (0, services_1.modificarEjemplarService)(req.body);
+            res.status(200).json(ejemplar);
+        }
+        catch (error) {
+            console.error('Error en el controlador de ejemplares:', error);
+            res.status(500).json({ message: 'Error al modificar ejemplares' });
+        }
+    });
+}
+exports.modificarEjemplarController = modificarEjemplarController;

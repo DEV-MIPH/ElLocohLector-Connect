@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllAdminService, getAllEstadosService, getAllNombreUsuariosService, getBooksCache, getEjemplaresbyIdPedido, getUserIdByEmailService, getViewEjemplaresService, postEjemplarService, postNewBook, postPedidoDataService, postPedidoService } from '../services/services';
+import { getAllAdminService, getAllEstadosService, getAllNombreUsuariosService, getBooksCache, getEjemplaresbyIdPedido, getUserIdByEmailService, getViewEjemplaresService, modificarEjemplarService, postEjemplarService, postNewBook, postPedidoDataService, postPedidoService } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
@@ -232,6 +232,17 @@ export async function getUserIdByEmailController(req: Request, res: Response): P
         res.status(200).json(user);
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
-        res.status(500).json({ message: 'Error al obtener los libros' });
+        res.status(500).json({ message: 'Error al getUserIdByEmailController' });
+    }
+}
+
+export async function modificarEjemplarController(req: Request, res: Response): Promise<void> {
+    try {
+        console.log("modificarEjemplarController "+ req.body)
+        const ejemplar = await modificarEjemplarService(req.body);
+        res.status(200).json(ejemplar);
+    } catch (error) {
+        console.error('Error en el controlador de ejemplares:', error);
+        res.status(500).json({ message: 'Error al modificar ejemplares' });
     }
 }

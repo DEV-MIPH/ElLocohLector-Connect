@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getAllEstadosController, getAllNombreUsuariosController, getEjemplaresByIdPedidoController, getUserIdByEmailController, getViewEjemplaresController, postAutorController, postBookController, 
+import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getAllEstadosController, getAllNombreUsuariosController, getEjemplaresByIdPedidoController, getUserIdByEmailController, getViewEjemplaresController, modificarEjemplarController, postAutorController, postBookController, 
     postCategoriaController, postEdicionController, postEditorialController, 
     postEjemplarController,
     postNewUser,
@@ -77,6 +77,8 @@ app.post('/ejemplaresByPedido', getEjemplaresByIdPedidoController);
 app.post('/pedidoo', postPedidoController);
 
 app.post('/getUserIdByEmail', getUserIdByEmailController);
+
+app.post('/modificarEjemplar', modificarEjemplarController);
 
 
 app.get('/', (req, res) => {

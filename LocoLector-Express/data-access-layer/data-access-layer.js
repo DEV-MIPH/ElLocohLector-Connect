@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserIdByEmail = exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.modificarEjemplar = exports.getIdEstadoByNombreEstado = exports.getUserIdByEmail = exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 dotenv_1.default.config();
@@ -553,3 +553,47 @@ function getUserIdByEmail(email) {
     });
 }
 exports.getUserIdByEmail = getUserIdByEmail;
+function getIdEstadoByNombreEstado(estado) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT id_estado FROM estado WHERE nombre_estado = ?;', [estado]);
+            if (rows.length > 0) {
+                return rows[0];
+            }
+            else {
+                return null;
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener el id del estado:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return null;
+        }
+    });
+}
+exports.getIdEstadoByNombreEstado = getIdEstadoByNombreEstado;
+function modificarEjemplar(ejemplar) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let id_estado = yield getIdEstadoByNombreEstado(ejemplar.estado);
+        try {
+            const sql = 'UPDATE ejemplar SET id_estado = ?, id_pedido = ? WHERE id_ejemplar = ?';
+            const result = yield pool.query(sql, [id_estado, ejemplar.id_pedido, ejemplar.id_ejemplar]);
+            const resultSetHeader = result[0];
+            return resultSetHeader.affectedRows > 0;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al modificar el ejemplar:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return false;
+        }
+    });
+}
+exports.modificarEjemplar = modificarEjemplar;
