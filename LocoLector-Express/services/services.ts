@@ -115,7 +115,7 @@ export async function getBooks() {
 export async function getBooksCache() {
     try {
         const cacheKey = "libros";
-        const tiempoCache = 3600;
+        const tiempoCache = 60;
 
 
         const booksFromCache = cache.get(cacheKey);
@@ -196,8 +196,7 @@ export async function getEdicionesService() {
 export async function postBookService(book: any) {
     try {
         const newBook = await postBookData(book);
-
-        cache.flushAll();
+        limpiarRedis();
         return newBook;
     } catch (error) {
         if (error instanceof Error) {
@@ -350,6 +349,7 @@ export async function postEjemplarService(ejemplar: Ejemplar) {
     }
     try {
         const newEjemplar = await postEjemplarData(ejemplarData);
+        limpiarRedis();
         return newEjemplar;
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
@@ -509,6 +509,16 @@ export async function modificarEjemplarService(ejemplar: any) {
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         return false;
+    }
+
+}
+
+export async function limpiarRedis() {
+    try {
+        await redis.flushall();
+        console.log("Redis limpiado");
+    } catch (error) {
+        console.error('Error al limpiar Redis:', error);
     }
 
 }

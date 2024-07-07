@@ -579,8 +579,6 @@ exports.getIdEstadoByNombreEstado = getIdEstadoByNombreEstado;
 function modificarEjemplar(ejemplar) {
     return __awaiter(this, void 0, void 0, function* () {
         let id_estado = yield getIdEstadoByNombreEstado(ejemplar.estado);
-        console.log(id_estado);
-        console.log(ejemplar);
         if (id_estado === null) {
             console.error('Error: el estado especificado no existe');
             return false;

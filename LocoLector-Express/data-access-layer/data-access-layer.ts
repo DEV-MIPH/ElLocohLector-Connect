@@ -526,8 +526,6 @@ export async function getIdEstadoByNombreEstado(estado: any) {
 
 export async function modificarEjemplar(ejemplar: EjemplarView) {
     let id_estado = await getIdEstadoByNombreEstado(ejemplar.estado);
-    console.log(id_estado);
-    console.log(ejemplar);
     if (id_estado === null) {
         console.error('Error: el estado especificado no existe');
         return false;

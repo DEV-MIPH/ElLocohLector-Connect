@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.modificarEjemplarService = exports.postPedidoDataService = exports.getUserIdByEmailService = exports.postPedidoService = exports.getAllNombreUsuariosService = exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.limpiarRedis = exports.modificarEjemplarService = exports.postPedidoDataService = exports.getUserIdByEmailService = exports.postPedidoService = exports.getAllNombreUsuariosService = exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -84,7 +84,7 @@ function getBooksCache() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const cacheKey = "libros";
-            const tiempoCache = 3600;
+            const tiempoCache = 60;
             const booksFromCache = cache.get(cacheKey);
             if (booksFromCache) {
                 console.log("Libros obtenidos de la caché local");
@@ -178,7 +178,7 @@ function postBookService(book) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const newBook = yield (0, data_access_layer_2.postBookData)(book);
-            cache.flushAll();
+            limpiarRedis();
             return newBook;
         }
         catch (error) {
@@ -349,6 +349,7 @@ function postEjemplarService(ejemplar) {
         };
         try {
             const newEjemplar = yield (0, data_access_layer_2.postEjemplarData)(ejemplarData);
+            limpiarRedis();
             return newEjemplar;
         }
         catch (error) {
@@ -552,6 +553,18 @@ function modificarEjemplarService(ejemplar) {
     });
 }
 exports.modificarEjemplarService = modificarEjemplarService;
+function limpiarRedis() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield redis.flushall();
+            console.log("Redis limpiado");
+        }
+        catch (error) {
+            console.error('Error al limpiar Redis:', error);
+        }
+    });
+}
+exports.limpiarRedis = limpiarRedis;
 function splitName(fullName) {
     const nameParts = fullName.trim().split(' ');
     const firstName = nameParts[0];
