@@ -481,6 +481,20 @@ export async function getEjemplaresByIdPedido(id: any) {
     }
 }
 
+export async function getAllNombreUsuariosData() {
+    try {
+        const [rows] = await pool.query('SELECT nombre_usuario from usuario where id_tipo_usuario = 2;');
+        return rows;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al obtener los usuarios:', error.message);
+        } else {
+            console.error('Error desconocido:', error);
+        }
+        return [];
+    }
+}
+
 export async function getAllEstados() {
     try {
         const [rows] = await pool.query('SELECT nombre_estado FROM estado;');

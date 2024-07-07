@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllAdminService, getAllEstadosService, getBooksCache, getEjemplaresbyIdPedido, getViewEjemplaresService, postEjemplarService, postNewBook } from '../services/services';
+import { getAllAdminService, getAllEstadosService, getAllNombreUsuariosService, getBooksCache, getEjemplaresbyIdPedido, getViewEjemplaresService, postEjemplarService, postNewBook } from '../services/services';
 import { getAutorService } from '../services/services';
 import { getCategoriasService } from '../services/services';
 import { getEditorialesService } from '../services/services';
@@ -203,6 +203,18 @@ export async function getAllEstadosController(req: Request, res: Response): Prom
         res.status(500).json({ message: 'Error al obtener los libros' });
     }
 }
+
+export async function getAllNombreUsuariosController(req: Request, res: Response): Promise<void> {
+    try {
+        const books = await getAllNombreUsuariosService();
+        res.status(200).json(books);
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        res.status(500).json({ message: 'Error al obtener los libros' });
+    }
+}
+
+
 
 
 

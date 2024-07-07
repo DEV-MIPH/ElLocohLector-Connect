@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
+exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
 const services_3 = require("../services/services");
@@ -258,3 +258,16 @@ function getAllEstadosController(req, res) {
     });
 }
 exports.getAllEstadosController = getAllEstadosController;
+function getAllNombreUsuariosController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const books = yield (0, services_1.getAllNombreUsuariosService)();
+            res.status(200).json(books);
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            res.status(500).json({ message: 'Error al obtener los libros' });
+        }
+    });
+}
+exports.getAllNombreUsuariosController = getAllNombreUsuariosController;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEstados = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 // Cargar las variables de entorno desde un archivo .env
@@ -515,6 +515,24 @@ function getEjemplaresByIdPedido(id) {
     });
 }
 exports.getEjemplaresByIdPedido = getEjemplaresByIdPedido;
+function getAllNombreUsuariosData() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [rows] = yield pool.query('SELECT nombre_usuario from usuario where id_tipo_usuario = 2;');
+            return rows;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                console.error('Error al obtener los usuarios:', error.message);
+            }
+            else {
+                console.error('Error desconocido:', error);
+            }
+            return [];
+        }
+    });
+}
+exports.getAllNombreUsuariosData = getAllNombreUsuariosData;
 function getAllEstados() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

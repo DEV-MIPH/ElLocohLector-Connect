@@ -34,6 +34,7 @@ app.get('/librosadmin', controller_1.getAllBooksController);
 app.get('/getadmins', controller_1.getAllAdminController);
 app.get('/ejemplares', controller_1.getViewEjemplaresController);
 app.get('/estados', controller_1.getAllEstadosController);
+app.get('/nombres_usuarios', controller_1.getAllNombreUsuariosController);
 app.post('/libros', controller_1.postBookController);
 app.post('/autores', controller_1.postAutorController);
 app.post('/categorias', controller_1.postCategoriaController);

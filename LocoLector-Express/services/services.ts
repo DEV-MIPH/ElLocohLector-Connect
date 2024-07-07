@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData, getEjemplaresByIdPedido, getAllEstados } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, postPedidoData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData } from '../data-access-layer/data-access-layer';
 import { postBookData, postAuthorData, postCategoryData, postEditionData, postEditorialData, postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName, getEditorialByName, getEditionByName, getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -461,6 +461,15 @@ export async function getAllEstadosService() {
     }
 }
 
+export async function getAllNombreUsuariosService() {
+    try {
+        const usuarios = await getAllNombreUsuariosData();
+        return usuarios;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return [];
+    }
+}
 
 
 //Funcion para separar el nombre del autor en nombre y apellido
