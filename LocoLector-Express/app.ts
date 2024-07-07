@@ -22,7 +22,7 @@ app.use(express.json());
 
 app.use(cors({
     origin: (origin, callback) => {
-            if (origin && origin.includes('localhost')) {
+            if (origin && origin.includes('https://lokolector.vercel.app/')) {
                 callback(null, true);
             } else {
                 callback(new Error('No permitido'));
