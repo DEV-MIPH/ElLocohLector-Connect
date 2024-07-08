@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.modificarEjemplarController = exports.getUserIdByEmailController = exports.postPedidoController = exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
+exports.modificarLibroController = exports.modificarEjemplarController = exports.getUserIdByEmailController = exports.postPedidoController = exports.getAllNombreUsuariosController = exports.getAllEstadosController = exports.getEjemplaresByIdPedidoController = exports.postNewEjemplar = exports.getViewEjemplaresController = exports.getAllAdminController = exports.postNewUser = exports.postEjemplarController = exports.postEdicionController = exports.postEditorialController = exports.postCategoriaController = exports.postAutorController = exports.postBookController = exports.getAllEdicionesController = exports.getAllEditorialesController = exports.getAllCategoriasController = exports.getAllAutoresController = exports.getAllBooksController = exports.getAllBooksCacheController = void 0;
 const services_1 = require("../services/services");
 const services_2 = require("../services/services");
 const services_3 = require("../services/services");
@@ -313,3 +313,16 @@ function modificarEjemplarController(req, res) {
     });
 }
 exports.modificarEjemplarController = modificarEjemplarController;
+function modificarLibroController(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const libro = yield (0, services_1.modificarLibroService)(req.body);
+            res.status(200).json(libro);
+        }
+        catch (error) {
+            console.error('Error en el controlador de ejemplares:', error);
+            res.status(500).json({ message: 'Error al modificar ejemplares' });
+        }
+    });
+}
+exports.modificarLibroController = modificarLibroController;

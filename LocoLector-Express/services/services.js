@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.limpiarRedis = exports.modificarEjemplarService = exports.postPedidoDataService = exports.getUserIdByEmailService = exports.postPedidoService = exports.getAllNombreUsuariosService = exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
+exports.limpiarRedis = exports.modificarLibroService = exports.modificarEjemplarService = exports.postPedidoDataService = exports.getUserIdByEmailService = exports.postPedidoService = exports.getAllNombreUsuariosService = exports.getAllEstadosService = exports.getEjemplaresbyIdPedido = exports.getViewEjemplaresService = exports.getAllAdminService = exports.postUser = exports.searchEdicion = exports.searchEditorial = exports.searchCategoria = exports.postEjemplarService = exports.postNewBook = exports.postEdicionService = exports.postEditorialService = exports.postCategoriaService = exports.postAutorService = exports.postBookService = exports.getEdicionesService = exports.getEditorialesService = exports.getCategoriasService = exports.getAutorService = exports.getBooksCache = exports.getBooks = exports.getAllBooksService = exports.getBooksService = void 0;
 const data_access_layer_1 = require("../data-access-layer/data-access-layer");
 const data_access_layer_2 = require("../data-access-layer/data-access-layer");
 const data_access_layer_3 = require("../data-access-layer/data-access-layer");
@@ -544,6 +544,7 @@ function modificarEjemplarService(ejemplar) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const ejemplaresModificados = yield (0, data_access_layer_1.modificarEjemplar)(ejemplar);
+            limpiarRedis();
             return ejemplaresModificados;
         }
         catch (error) {
@@ -553,6 +554,76 @@ function modificarEjemplarService(ejemplar) {
     });
 }
 exports.modificarEjemplarService = modificarEjemplarService;
+function modificarLibroService(libro) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const libroCreado = {
+            titulo_libro: libro.titulo,
+            autor: 0,
+            categoria: 0,
+            editorial: 0,
+            edicion: 0
+        };
+        const { firstName, lastName } = splitName(libro.Autor);
+        if (!(yield searchAutor(firstName, lastName))) {
+            yield postAutorService({ nombre_autor: firstName, apellido_autor: lastName });
+            console.log("Autor nuevo creado " + libro.Autor);
+            if ((yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName)) != null) {
+                libroCreado.autor = yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName)) != null) {
+                libroCreado.autor = yield (0, data_access_layer_3.getAuthorByName)(firstName, lastName);
+            }
+        }
+        if (!(yield searchCategoria(libro.Categoria))) {
+            yield postCategoriaService({ nombre_categoria: libro.Categoria });
+            console.log("Categoria nueva creada " + libro.Categoria);
+            if ((yield (0, data_access_layer_3.getCategoryByName)(libro.Categoria)) != null) {
+                libroCreado.categoria = yield (0, data_access_layer_3.getCategoryByName)(libro.Categoria);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getCategoryByName)(libro.Categoria)) != null) {
+                libroCreado.categoria = yield (0, data_access_layer_3.getCategoryByName)(libro.Categoria);
+            }
+        }
+        if (!(yield searchEditorial(libro.Editorial))) {
+            yield postEditorialService({ nombre_editorial: libro.Editorial });
+            console.log("Editorial nueva creada " + libro.Editorial);
+            if ((yield (0, data_access_layer_3.getEditorialByName)(libro.Editorial)) != null) {
+                libroCreado.editorial = yield (0, data_access_layer_3.getEditorialByName)(libro.Editorial);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getEditorialByName)(libro.Editorial)) != null) {
+                libroCreado.editorial = yield (0, data_access_layer_3.getEditorialByName)(libro.Editorial);
+            }
+        }
+        if (!(yield searchEdicion(libro.edicion))) {
+            yield postEdicionService({ edicion: libro.edicion });
+            console.log("Edicion nueva creada " + libro.edicion);
+            if ((yield (0, data_access_layer_3.getEditionByName)(libro.edicion)) != null) {
+                libroCreado.edicion = yield (0, data_access_layer_3.getEditionByName)(libro.edicion);
+            }
+        }
+        else {
+            if ((yield (0, data_access_layer_3.getEditionByName)(libro.edicion)) != null) {
+                libroCreado.edicion = yield (0, data_access_layer_3.getEditionByName)(libro.edicion);
+            }
+        }
+        try {
+            const newBook = yield (0, data_access_layer_1.modificarLibro)(libroCreado, libro.id);
+            limpiarRedis();
+            return newBook;
+        }
+        catch (error) {
+            console.error('Error en el controlador de libros:', error);
+            return false;
+        }
+    });
+}
+exports.modificarLibroService = modificarLibroService;
 function limpiarRedis() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.modificarEjemplar = exports.getIdEstadoByNombreEstado = exports.getUserIdByEmail = exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
+exports.modificarLibro = exports.modificarEjemplar = exports.getIdEstadoByNombreEstado = exports.getUserIdByEmail = exports.getAllEstados = exports.getAllNombreUsuariosData = exports.getEjemplaresByIdPedido = exports.getUserByEmail = exports.postPedidoData = exports.postEjemplarData = exports.getViewEjemplares = exports.getAdmins = exports.postUserData = exports.getBookByData = exports.getEditionByName = exports.getCategoryByName = exports.getEditorialByName = exports.getAuthorByName = exports.postEditionData = exports.postEditorialData = exports.postCategoryData = exports.postAuthorData = exports.postBookData = exports.getAllEditions = exports.getAllEditorials = exports.getAllCategories = exports.getAllAuthors = exports.getBooksJoin = exports.getAllBooks = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const promise_1 = require("mysql2/promise");
 dotenv_1.default.config();
@@ -607,3 +607,34 @@ function modificarEjemplar(ejemplar) {
     });
 }
 exports.modificarEjemplar = modificarEjemplar;
+function modificarLibro(libro, id_libro) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const idAutor = libro.autor;
+        const idCategoria = libro.categoria;
+        const idEditorial = libro.editorial;
+        const idEdicion = libro.edicion;
+        const libroActualizado = {
+            titulo_libro: libro.titulo_libro,
+            autor: idAutor,
+            categoria: idCategoria,
+            editorial: idEditorial,
+            edicion: idEdicion
+        };
+        try {
+            const sql = 'UPDATE libro SET titulo_libro = ?, autor = ?, categoria = ?, editorial = ?, edicion = ? WHERE id_libro = ?';
+            const [result] = yield pool.query(sql, [libroActualizado.titulo_libro, libroActualizado.autor, libroActualizado.categoria, libroActualizado.editorial, libroActualizado.edicion, id_libro]);
+            if (result && result.affectedRows !== undefined) {
+                return result.affectedRows > 0;
+            }
+            else {
+                console.error('Error: El resultado de la consulta no tiene la estructura esperada');
+                return false;
+            }
+        }
+        catch (error) {
+            console.error('Error al modificar el libro:', error);
+            return false;
+        }
+    });
+}
+exports.modificarLibro = modificarLibro;

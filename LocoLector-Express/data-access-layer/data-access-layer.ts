@@ -8,10 +8,10 @@ dotenv.config();
 
 interface Book {
     titulo_libro: string;
-    autor: number;
-    categoria: number;
-    editorial: number;
-    edicion: number;
+    autor: number | null;
+    categoria: number | null;
+    editorial: number | null;
+    edicion: number | null;
 }
 
 interface Author {
@@ -548,6 +548,37 @@ export async function modificarEjemplar(ejemplar: EjemplarView) {
         } else {
             console.error('Error desconocido:', error);
         }
+        return false;
+    }
+}
+
+export async function modificarLibro(libro: any, id_libro: number) {
+    const idAutor = libro.autor;
+    const idCategoria = libro.categoria;
+    const idEditorial = libro.editorial;
+    const idEdicion = libro.edicion;
+    
+    const libroActualizado = {
+        titulo_libro: libro.titulo_libro,
+        autor: idAutor,
+        categoria: idCategoria,
+        editorial: idEditorial,
+        edicion: idEdicion
+    };
+
+    try {
+        const sql = 'UPDATE libro SET titulo_libro = ?, autor = ?, categoria = ?, editorial = ?, edicion = ? WHERE id_libro = ?';
+        const [result]: any[] = await pool.query(sql, [libroActualizado.titulo_libro, libroActualizado.autor, libroActualizado.categoria, libroActualizado.editorial, libroActualizado.edicion, id_libro]);
+        
+        if (result && result.affectedRows !== undefined) {
+            return result.affectedRows > 0;
+        } else {
+            console.error('Error: El resultado de la consulta no tiene la estructura esperada');
+            return false;
+        }
+        
+    } catch (error) {
+        console.error('Error al modificar el libro:', error);
         return false;
     }
 }

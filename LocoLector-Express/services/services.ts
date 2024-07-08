@@ -1,4 +1,4 @@
-import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData, getUserByEmail, getUserIdByEmail, postPedidoData, modificarEjemplar } from '../data-access-layer/data-access-layer';
+import { getAllAuthors, getBooksJoin, getAllCategories, getAllEditorials, getAllEditions, getAllBooks, postUserData, getAdmins, getViewEjemplares, getBookByData, getEjemplaresByIdPedido, getAllEstados, getAllNombreUsuariosData, getUserByEmail, getUserIdByEmail, postPedidoData, modificarEjemplar, modificarLibro } from '../data-access-layer/data-access-layer';
 import { postBookData, postAuthorData, postCategoryData, postEditionData, postEditorialData, postEjemplarData } from '../data-access-layer/data-access-layer';
 import { getAuthorByName, getEditorialByName, getEditionByName, getCategoryByName } from '../data-access-layer/data-access-layer';
 
@@ -53,7 +53,7 @@ interface Usuario {
     id_tipo_usuario: number;
 }
 
-interface PedidoData{
+interface PedidoData {
     email_usuario: string;
 }
 
@@ -479,7 +479,7 @@ export async function postPedidoService(usuario: any) {
 
 export async function getUserIdByEmailService(email: any) {
     try {
-        console.log("user service "+email)
+        console.log("user service " + email)
         const user = await getUserIdByEmail(email);
         return user;
     } catch (error) {
@@ -505,27 +505,94 @@ export async function postPedidoDataService(email: any) {
 export async function modificarEjemplarService(ejemplar: any) {
     try {
         const ejemplaresModificados = await modificarEjemplar(ejemplar);
+        limpiarRedis();
         return ejemplaresModificados;
     } catch (error) {
         console.error('Error en el controlador de libros:', error);
         return false;
     }
-
 }
 
-export async function limpiarRedis() {
-    try {
-        await redis.flushall();
-        console.log("Redis limpiado");
-    } catch (error) {
-        console.error('Error al limpiar Redis:', error);
+export async function modificarLibroService(libro: any) {
+    const libroCreado: NewBook = {
+        titulo_libro: libro.titulo,
+        autor: 0,
+        categoria: 0,
+        editorial: 0,
+        edicion: 0
+    }
+    const { firstName, lastName } = splitName(libro.Autor);
+    if (!await searchAutor(firstName, lastName)) {
+        await postAutorService({ nombre_autor: firstName, apellido_autor: lastName });
+        console.log("Autor nuevo creado " + libro.Autor)
+        if (await getAuthorByName(firstName, lastName) != null) {
+            libroCreado.autor = await getAuthorByName(firstName, lastName);
+        }
+    } else {
+        if (await getAuthorByName(firstName, lastName) != null) {
+            libroCreado.autor = await getAuthorByName(firstName, lastName);
+        }
     }
 
+    if (!await searchCategoria(libro.Categoria)) {
+        await postCategoriaService({ nombre_categoria: libro.Categoria });
+        console.log("Categoria nueva creada " + libro.Categoria)
+        if (await getCategoryByName(libro.Categoria) != null) {
+            libroCreado.categoria = await getCategoryByName(libro.Categoria);
+        }
+    } else {
+        if (await getCategoryByName(libro.Categoria) != null) {
+            libroCreado.categoria = await getCategoryByName(libro.Categoria);
+        }
+    }
+
+    if (!await searchEditorial(libro.Editorial)) {
+        await postEditorialService({ nombre_editorial: libro.Editorial });
+        console.log("Editorial nueva creada " + libro.Editorial)
+        if (await getEditorialByName(libro.Editorial) != null) {
+            libroCreado.editorial = await getEditorialByName(libro.Editorial);
+        }
+    } else {
+        if (await getEditorialByName(libro.Editorial) != null) {
+            libroCreado.editorial = await getEditorialByName(libro.Editorial);
+        }
+    }
+
+    if (!await searchEdicion(libro.edicion)) {
+        await postEdicionService({ edicion: libro.edicion });
+        console.log("Edicion nueva creada " + libro.edicion)
+        if (await getEditionByName(libro.edicion) != null) {
+            libroCreado.edicion = await getEditionByName(libro.edicion);
+        }
+    } else {
+        if (await getEditionByName(libro.edicion) != null) {
+            libroCreado.edicion = await getEditionByName(libro.edicion);
+        }
+    }
+
+    try {
+        const newBook = await modificarLibro(libroCreado, libro.id);
+        limpiarRedis();
+        return newBook;
+    } catch (error) {
+        console.error('Error en el controlador de libros:', error);
+        return false;
+    }
 }
 
-function splitName(fullName: string) {
-    const nameParts = fullName.trim().split(' ');
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' ');
-    return { firstName, lastName };
-}
+
+    export async function limpiarRedis() {
+        try {
+            await redis.flushall();
+            console.log("Redis limpiado");
+        } catch (error) {
+            console.error('Error al limpiar Redis:', error);
+        }
+    }
+
+    function splitName(fullName: string) {
+        const nameParts = fullName.trim().split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ');
+        return { firstName, lastName };
+    }

@@ -48,6 +48,7 @@ app.post('/ejemplaresByPedido', controller_1.getEjemplaresByIdPedidoController);
 app.post('/pedidoo', controller_1.postPedidoController);
 app.post('/getUserIdByEmail', controller_1.getUserIdByEmailController);
 app.post('/modificarEjemplar', controller_1.modificarEjemplarController);
+app.post('/modificarLibro', controller_1.modificarLibroController);
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });

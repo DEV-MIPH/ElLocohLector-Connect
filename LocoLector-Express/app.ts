@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getAllEstadosController, getAllNombreUsuariosController, getEjemplaresByIdPedidoController, getUserIdByEmailController, getViewEjemplaresController, modificarEjemplarController, postAutorController, postBookController, 
+import { getAllAdminController, getAllBooksCacheController, getAllBooksController, getAllEstadosController, getAllNombreUsuariosController, getEjemplaresByIdPedidoController, getUserIdByEmailController, getViewEjemplaresController, modificarEjemplarController, modificarLibroController, postAutorController, postBookController, 
     postCategoriaController, postEdicionController, postEditorialController, 
     postEjemplarController,
     postNewUser,
@@ -13,6 +13,7 @@ import { getAllEdicionesController } from './controller/controller';
 
 import cors from 'cors';
 import { sendEmail } from './controller/emailController';
+import { modificarLibroService } from './services/services';
 
 
 const app = express();
@@ -79,6 +80,8 @@ app.post('/pedidoo', postPedidoController);
 app.post('/getUserIdByEmail', getUserIdByEmailController);
 
 app.post('/modificarEjemplar', modificarEjemplarController);
+
+app.post('/modificarLibro', modificarLibroController);
 
 
 app.get('/', (req, res) => {
