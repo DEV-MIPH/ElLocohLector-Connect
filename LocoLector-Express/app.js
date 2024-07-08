@@ -16,7 +16,7 @@ const port = 3000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
-        if (origin && origin.includes('https://lokolector.vercel.app')) {
+        if (origin && origin.includes('localhost')) {
             callback(null, true);
         }
         else {
